@@ -1,0 +1,260 @@
+# R - 행렬과 벡터
+
+Acknowledgement: 본 절의 구성에는 다음 교재를 발췌하였다.
+
+- Norman Matloff 지음, 권정민 역 (2012). 빅데이터 분석 도구 R 프로그래밍 (원제 The Art of R Programming). 에이콘.
+
+
+## 벡터
+
+벡터는 동일한 자료형(숫자, 문자열 등)의 모음이다. 벡터는 R의 모든 연산의 근간이다. 여기서는 벡터의 생성법 및 특정 성분으로의 접근법을 소개한다.
+
+
+### 수치형(numeric) 벡터의 생성
+
+- c(), (number):(number), seq(), rep() 등을 이용할 수 있다.
+
+```{r}
+c(1, 4, 3, 5) 
+a = 1:4 
+b = 15 
+c( c(2, 4), a, b ) 
+seq(1, 11, 3) 
+# seq()는 from, to, length, by를 지정할 수도 있다. to나 length 중의 하나만 지정하면 수열이 결정# 되므로 둘 중의 하나만 택하는 걸 권한다.
+seq(from = 1, to = 11, by = 3) 
+seq(from = 1, length = 4, by = 3)
+rep(1, 6)
+rep(c(1, 2), 5)
+rep(c(1, 2, 3), c(4, 3, 2))
+```
+
+- 벡터에 입력될 수 있는 성분은 수치(numeric)뿐만 아니라 logical(논리형), character(문자열)도 가능하다. 벡터의 자료형별로 적절한 연산들이 지원된다.
+```{r}
+a = "stat"
+b = c("research", "community")
+paste(a, b)                    # 두 문자열을 붙이기
+
+f = TRUE ; g = c(FALSE, TRUE) ;
+f | g                          # or 연산
+f & g                         # and 연산
+```
+
+- 한 벡터/행렬에는 같은 유형의 성분만 사용되는 것이 원칙. 단 NA, NULL은 예외. NA와 NULL은 실수형 벡터(행렬), 논리형 벡터(행렬).. 등 자료 구성원의 유형에 관계없이 성분이 될 수 있다.
+```{r}
+a = c(1, 2, 3)
+b = c(1, 2, NA)
+c = c(1, 2, "ch")
+a ; b ; c
+```
+
+
+### 벡터 객체로의 접근법
+
+- 성분에 접근하려면 대괄호 []를 이용한다. 벡터 a에 대해 a[index number]를 입력하는 것이 보편적이다. index number에 아무 것도 입력하지 않으면 모든 성분을 불러온다.
+```{r}
+a = c(1, 5, 8, 7) ;
+a 
+a[3]
+a[ ]
+c(1, 5, 8, 7) [3] 
+```
+
+- 한꺼번에 여러 index의 성분을 추출할 수도 있다. 단, **index들을 벡터로 묶어서 알려줘야 한다.**
+```{r}
+x = seq(from = 10, to = 100, by = 10)
+x
+x[c(2, 4, 6, 8, 10)] 
+y = x[seq(2, 10, 2)] 
+y
+```
+
+- 추출하지 않을 성분을 알려주어 나머지 성분을 추출할 수도 있다.
+```{r}
+x = seq(from = 10, length = 100, by = 10)
+x
+x[-1]
+x[-c(1, 2)]
+```
+
+- 그 외에도 벡터에 대한 정보를 알려주는 다양한 함수들이 있다.
+```{r}
+x = seq(from = 1, length = 100, by = 2) ;
+
+length(x)				# x의 길이
+head(x)				# x의 최초 6개 성분만 열람
+summary(x)				# x의 성분들에 대한 기초통계 결과
+sum(x)				# x의 성분들의 합
+mean(x)				# x의 성분들의 평균
+var(x)				# x의 성분들의 표본분산(편차제곱을 n-1로 나눔)
+```
+
+- `c(1, 5, 19, 2, 1, 2, 2, 8)`에 대하여 min(x), max(x), order(x), factor(x), table(x)... 등도 각자 해 보길 바란다. factor(x)와 table(x)는 x가 연속형 실수가 아닌 이산형(문자열형, 혹은 1, 2, 3, ..등)으로 이루어진 자료일 경우에 유용하다.
+
+
+
+### 수치형 벡터의 연산 
+
+- 기본적으로 R은 열벡터(column vector)에 매우 친화적이다. R에서 벡터는 열벡터로 인식된다. 벡터가 화면에 가로로 나열되는 건 경제성을 위해서이다. 스칼라값도 R 내부적으로는 길이 1짜리 벡터로 취급된다.
+
+- R은 벡터 단위의 연산을 제공한다. 스칼라 곱은 당연히 되며, element-wise operation 또한 가능하다. element-wise operation은 행렬끼리의 연산에서도 지원된다. R의 좋은 기능 중 하나다.
+
+```{r}
+a = pi/4
+tan(a)
+
+b = c(pi/3, pi/4, pi/6) 
+sin(b)				# element-wise operation
+exp(c(-1, 0, 1)) 
+
+d = exp(c(-1, 0, 1)) 
+b + d 				# element-wise operation
+b - d				# element-wise operation
+
+x = c(1, 2, 3) ; y = c(1, 2, 3) 
+x - 1
+2 * x 
+x * y 				# element-wise operation
+sum(x * y)				# inner product of x and y
+
+x / y				# element-wise operation
+```
+
+
+- `x - 1`은 왜 가능할까? 길이가 다른 두 벡터가 만나면 짧은 벡터가 알아서 복제된다. 다만, 길이들이 서로 약수/배수의 관계에 있어야 warning이 뜨지 않는다.
+```{r}
+x = c(1, 2, 3, 4, 5) 
+x - c(1,2) ;				# warning. 실제로는 c(1, 2, 3, 4, 5) - c(1, 2, 1, 2, 1) 계산
+x - 1 				# 실제로는 c(1, 2, 3, 4, 5) - c(1, 1, 1, 1, 1) 계산
+```
+
+
+- 한편, 위에서 보았듯 `*`은 기본적으로 성분별 곱셈 연산자이며 이는 행렬에서도 똑같이 취급된다. 행렬의 곱셈은 연산자 `%*%`로 한다. 
+
+- 크롤링 이후에는 문자열형 벡터를 자주 다루게 된다. R의 stringr 패키지를 이용하면 문자열형 벡터도 다양한 변환이 가능하다. 다음 링크의 53페이지부터 따라하면 된다: [https://statkclee.github.io/yonsei/data/R_Web_Crawling.pdf](https://statkclee.github.io/yonsei/data/R_Web_Crawling.pdf)
+
+
+
+## 행렬
+
+### 행렬의 생성
+
+- 일러두기: 아래 예시코드들에서는 쉬운 설명을 위하여 수치형 행렬만 다루고 있으나, 논리형/문자열형 행렬도 같은 코드로 생성/접근이 가능하다.
+
+- 기본적으로 행렬은 matrix()와 벡터로부터 만든다. 관습과 다르게 R은 행렬을 column-wise 채워나간다. R이 열벡터에 친화적이라는 점을 기억하자. row-wise 채워나가려면 byrow=TRUE 옵션을 붙여준다.
+
+```{r}
+a = 1:6 
+b = matrix(a, nrow = 3, ncol = 2) 
+b 
+matrix(a, nrow =3, ncol = 2, byrow = TRUE) ;
+matrix(a, 3, 2, byrow = T) ;
+matrix(a, 3, byrow = T) ;
+```
+
+- rbind(), cbind()는 길이가 같은 벡터들을 행별/열별로 엮어 행렬로 만들어 준다. diag()은 대각행렬을 만들 때 유용하다.
+
+```{r}
+x = 1:3 ; y = 4:6 ; A = matrix(7:12, nrow = 3)
+rbind(x, y)
+cbind(x, y)
+cbind(x, y, A)
+diag(x)
+```
+
+
+### 행렬 객체로의 접근
+
+- 성분에 접근하는 방법은 벡터와 매우 유사하다. 다만 쉼표를 이용하여 A[row index, col index]의 형식을 취한다. 만약 index에 아무 것도 입력하지 않으면 모든 index를 불러온다. 쉼표(',')는 반드시 써야 한다.
+```{r}
+A = matrix(1:12, nrow = 3, byrow = TRUE)
+A
+A[ ]
+A[ , ] 
+A[2, 3]
+A[1, ]
+A[c(1,2), ]
+A[ , -1]
+```
+
+
+- 벡터의 정보를 파악하기 위해 썼던 함수들은 대부분 행렬에도 적용 가능하다. 벡터 예제와 비교하여, 새롭게 dim()만 추가하였다.
+- 아래 코드들과 더불어, min(x), max(x), order(x), factor(x), table(x).. 들도 여전히 유효한지 확인해 보라.
+```{r}
+A = matrix(1:60, nrow = 15, byrow = TRUE )
+A
+head(A)
+length(A)
+dim(A)
+sum(A)
+mean(A)
+var(A)
+summary(A)
+```
+
+
+### 행렬의 연산
+
+- element-wise operation은 행렬에서도 유효하다.
+```{r}
+a = matrix(1:4, nrow = 2, byrow = T) 
+b = a
+exp(a)
+a + b 
+2 * a
+a * b
+a^2
+```
+
+- 행렬의 곱셈은 연산자 `%*%`을 사용한다.
+```{r}
+a = matrix(1:4, nrow = 2, byrow = T) 
+b = a
+x = c(1, 1)
+a %*% b
+a %*% x
+
+y = matrix(c(1,2), nrow = 1)
+
+## a와 y의 행렬곱도 해 보라. 계산이 잘 정의되지 않는다. 왜?
+dim(y)
+
+z = a[1, ] 
+a %*% z
+
+dim(z)
+```
+
+
+- 위 계산에서 x는 길이 2짜리 벡터이므로 자동으로 열벡터로 취급되어 `a %*% x`가 잘 정의된다. y는 1 by 2 matrix이므로 `a %*% y`가 잘 정의되지 않는다. y가 1 by 2 matrix임은 dim(y)를 통해 확인할 수 있다. z는 명령어로 보건대 1 by 2 matrix같은데 `a %*% z`는 또 잘 계산된다. dim(z)가 NULL값을 반환하는 것으로 보아 z는 벡터임을 알 수 있다. 어떤 알고리즘 때문인지, 저렇게 추출한 z는 벡터 상태가 되었다.
+
+- R은 고급 행렬 연산도 모두 지원한다.
+```{r}
+a = matrix(1:4, nrow = 2, byrow = T) 
+t(a)					# transpose of a
+solve(a) 				# inverse of a
+det(a) 				# determinant of a
+diag(a) 				# diagonal elements of a, if a is a matrix
+svd(a) 				# SVD of a
+qr(a) 					# QR decomposition of a
+```
+
+
+### 행/열 단위의 함수 적용
+
+- 예제용으로 4 by 4 행렬 X를 만들자.
+
+```{r}
+X = matrix(1:16, 4, 4) 
+```
+
+
+- 행별/열별 평균이나 합은 rowMeans(), colMeans(), rowSums(), colSums()를 사용할 수 있다. 일반적으로 R에서는 행렬에서 행/열 단위로 임의의 함수를 적용한 결과를 한꺼번에 얻을 수 있는 함수 apply()가 있다. apply의 사용법은 apply(행렬, 행/열방향, 적용할 함수).
+
+```{r}
+apply(X, 1, mean) 		# 1 : rowwise
+apply(X, 2, mean) 		# 2 : columnwise
+```
+
+- apply(X, 1, mean)은 rowMeans()와 같은 효과를 내고 있다.
+
+

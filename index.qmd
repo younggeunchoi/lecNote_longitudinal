@@ -1,9 +1,68 @@
-# Preface {.unnumbered}
+# 강의계획서 {.unnumbered}
 
-This is a Quarto book.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+**CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석 (Statistical Analysis for Mathematics Educaiton: Regression Models and Longitudinal Data Analysis)**
 
-```{r}
-1 + 1
-```
+**2024-2학기 성균관대 교과교육학과(수학) 대학원**
+
+**월 6:00p–8:40p / 호암관 50415**
+
+
+### 1. 강좌 개요와 목표
+
+- 본 과목에서는 수학교육학 및 사회과학 연구에 필요한 통계분석 방법론 중 가장 범용적 도구인 회귀모형(regression modeling) 및 경시적 자료 분석(longitudinal data analysis)의 원리를 소개하고 R로 실습한다.
+- 회귀모형은 두 변수 간의 관계성을 추정하는 모형을 일컫는다. 특히 두 변수가 선형관계를 갖는 경우 종속변수($Y$)에 대한 독립변수($X$)의 효과($X$의 계수)의 추정이 사회과학 연구에 중요하다.
+- 경시적 자료(longitudinal data)는 한 단위에서 여러 관찰값을 갖는 자료를 뜻한다. 분야에 따라 종단면 자료, 패널자료(panel data) 또는 반복측정자료(repeatedly measured data)라고도 불린다. 예를 들어 한 집단을 장기간 추적관찰한 경우나 학급 단위로 평가가 실시된 경우에, 특정 요인이나 정책이 설명하는 변화량을 추정하고 싶을 때 본 방법론이 적절하다. 경시적 자료 분석기법들의 주요 관심사도 (회귀분석과 마찬가지로) 특정 독립변수의 효과를 편향되지 않게 추정하는 데 있다. 특히 경시자료는 관찰값들끼리 상관성이 존재하므로 평범한 회귀분석 기법을 적용할 경우 편향된 추정으로 이어질 수 있어 주의가 필요하다.
+- 실습코드 이해 및 프로젝트 진행을 위하여는 R 기본지식을 필요로 하므로, **수강희망자 중 R 선수경험이 없는 분께는 R 기초강좌 수강을 강력히 권장**합니다 (예를들어 https://swb.skku.edu/rias/sub4.do).
+
+
+### 2. 교강사
+
+- 최영근 (성균관대 수학교육과 조교수) 
+- e-mail: ygchoi [at] skku [dot] edu
+- 홈페이지: https://sites.google.com/view/ygchoi
+- 연구실: 호암관 5층 51206호
+- office hour: 월 4:30pm-6pm
+
+### 3. 교재
+
+- 주교재: 강의노트를 자체제작 및 배부
+- 부교재 
+  - 회귀분석 기초이론 관련
+    - [1] 강근석, 유현조 (2016). R을 활용한 선형회귀분석. 교우사.
+    - [2] 한치록 (2024). 계량경제학 강의 (5판). 박영사.
+  - 패널데이터 분석 관련
+    - [3] Frees (2004). Longitudinal and Panel Data: Analysis and Applications in the Social Sciences. Cambridge University Press.
+    - [4] 김양진 (2020). R과 SAS를 활용한 경시적 자료분석. 자유아카데미.  
+    - [5] 한치록 (2024). 패널데이터강의 (4판). 박영사.
+- 교재들의 구매필요 여부는 추후공지
+
+### 4. 성적 및 평가
+
+- 출석 10%, 과제 45%, 프로젝트 45%
+- 과제: 이론/실습의 숙달 및 프로젝트 구상을 돕기 위한 연습문제들
+- 프로젝트: 본인이 관심있는 연구주제와 데이터를 골라서, 수업시간에 다루어진 기법들을 활용하여 간단한 자료탐색과 분석을 진행
+  - 프로포절: 8주차 월, 5분 발표, 5분 질의응답
+  - 본발표: 16주차 월, 25분 발표, 10분 질의응답
+  - 보고서 제출기한: 16주차 금
+    - 양적연구 논문의 형식을 갖출 것 (서론 / 연구방법 / 결과 / 해석)
+    - 분량은 10매 이내 (기준: 표와 그림 포함, 참고문헌 제외) 
+
+### 5. 강의 주제
+
+- 회귀분석
+  - 시각화를 통한 탐색적 자료분석
+  - 관측치가 하나일 때의 기본적 회귀분석모형 
+    - 단순선형회귀모형 (simple linear regression)
+    - 다중선형회귀모형 (multiple linear regression)
+    - 로지스틱 선형회귀모형 (logistic linear regression)
+    - 일반화 선형모형 (generalized linear model)
+- 경시적 자료의 회귀분석
+  - 시각화를 통한 탐색적 자료분석
+  - 반응변수가 연속형인 경시자료에 대한 선형모형
+    - 고정효과모형 (fixed effect model)
+    - 임의효과모형 (random effect model)
+    - 혼합효과모형 (mixed effect model)
+  - 반응변수가 범주형인 경시자료에 대한 선형모형
+    - 일반화 선형혼합모형 (generalized linear mixed effect model)
+    - 일반화 추정방정식 (generalized estimating equation)

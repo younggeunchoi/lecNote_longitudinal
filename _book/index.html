@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Norah Jones">
+<meta name="author" content="최영근">
 <meta name="dcterms.date" content="2024-08-30">
 
-<title>lecNote_longitudinal</title>
+<title>CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,40 +22,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -66,7 +32,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
+<link href="./R-1-basics.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,6 +70,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -116,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">강의계획서</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -131,7 +126,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">lecNote_longitudinal</a> 
+      <a href="./">CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -144,25 +139,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">강의계획서</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  <a href="./R-1-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R - 기초 연산</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="./R-2-vec-mat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R - 행렬과 벡터</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./R-3-statements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R - 조건문, 반복문, 함수를 이용한 프로그래밍</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-4-list-dfs-io.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R - 데이터(테이블) 다루기</span></span></a>
   </div>
 </li>
     </ul>
@@ -175,7 +176,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#강의계획서" id="toc-강의계획서" class="nav-link active" data-scroll-target="#강의계획서">강의계획서</a>
+  <ul class="collapse">
+  <li><a href="#강좌-개요와-목표" id="toc-강좌-개요와-목표" class="nav-link" data-scroll-target="#강좌-개요와-목표">1. 강좌 개요와 목표</a></li>
+  <li><a href="#교강사" id="toc-교강사" class="nav-link" data-scroll-target="#교강사">2. 교강사</a></li>
+  <li><a href="#교재" id="toc-교재" class="nav-link" data-scroll-target="#교재">3. 교재</a></li>
+  <li><a href="#성적-및-평가" id="toc-성적-및-평가" class="nav-link" data-scroll-target="#성적-및-평가">4. 성적 및 평가</a></li>
+  <li><a href="#강의-주제" id="toc-강의-주제" class="nav-link" data-scroll-target="#강의-주제">5. 강의 주제</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -184,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">lecNote_longitudinal</h1>
+<h1 class="title">CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석</h1>
 </div>
 
 
@@ -194,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Norah Jones </p>
+             <p>최영근 </p>
           </div>
   </div>
     
@@ -213,18 +221,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>This is a Quarto book.</p>
-<p>To learn more about Quarto books visit <a href="https://quarto.org/docs/books" class="uri">https://quarto.org/docs/books</a>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
+<section id="강의계획서" class="level1 unnumbered">
+<h1 class="unnumbered">강의계획서</h1>
+<p><strong>CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석 (Statistical Analysis for Mathematics Educaiton: Regression Models and Longitudinal Data Analysis)</strong></p>
+<p><strong>2024-2학기 성균관대 교과교육학과(수학) 대학원</strong></p>
+<p><strong>월 6:00p–8:40p / 호암관 50415</strong></p>
+<section id="강좌-개요와-목표" class="level3">
+<h3 class="anchored" data-anchor-id="강좌-개요와-목표">1. 강좌 개요와 목표</h3>
+<ul>
+<li>본 과목에서는 수학교육학 및 사회과학 연구에 필요한 통계분석 방법론 중 가장 범용적 도구인 회귀모형(regression modeling) 및 경시적 자료 분석(longitudinal data analysis)의 원리를 소개하고 R로 실습한다.</li>
+<li>회귀모형은 두 변수 간의 관계성을 추정하는 모형을 일컫는다. 특히 두 변수가 선형관계를 갖는 경우 종속변수(<span class="math inline">\(Y\)</span>)에 대한 독립변수(<span class="math inline">\(X\)</span>)의 효과(<span class="math inline">\(X\)</span>의 계수)의 추정이 사회과학 연구에 중요하다.</li>
+<li>경시적 자료(longitudinal data)는 한 단위에서 여러 관찰값을 갖는 자료를 뜻한다. 분야에 따라 종단면 자료, 패널자료(panel data) 또는 반복측정자료(repeatedly measured data)라고도 불린다. 예를 들어 한 집단을 장기간 추적관찰한 경우나 학급 단위로 평가가 실시된 경우에, 특정 요인이나 정책이 설명하는 변화량을 추정하고 싶을 때 본 방법론이 적절하다. 경시적 자료 분석기법들의 주요 관심사도 (회귀분석과 마찬가지로) 특정 독립변수의 효과를 편향되지 않게 추정하는 데 있다. 특히 경시자료는 관찰값들끼리 상관성이 존재하므로 평범한 회귀분석 기법을 적용할 경우 편향된 추정으로 이어질 수 있어 주의가 필요하다.</li>
+<li>실습코드 이해 및 프로젝트 진행을 위하여는 R 기본지식을 필요로 하므로, <strong>수강희망자 중 R 선수경험이 없는 분께는 R 기초강좌 수강을 강력히 권장</strong>합니다 (예를들어 https://swb.skku.edu/rias/sub4.do).</li>
+</ul>
+</section>
+<section id="교강사" class="level3">
+<h3 class="anchored" data-anchor-id="교강사">2. 교강사</h3>
+<ul>
+<li>최영근 (성균관대 수학교육과 조교수)</li>
+<li>e-mail: ygchoi [at] skku [dot] edu</li>
+<li>홈페이지: https://sites.google.com/view/ygchoi</li>
+<li>연구실: 호암관 5층 51206호</li>
+<li>office hour: 월 4:30pm-6pm</li>
+</ul>
+</section>
+<section id="교재" class="level3">
+<h3 class="anchored" data-anchor-id="교재">3. 교재</h3>
+<ul>
+<li>주교재: 강의노트를 자체제작 및 배부</li>
+<li>부교재
+<ul>
+<li>회귀분석 기초이론 관련
+<ul>
+<li>[1] 강근석, 유현조 (2016). R을 활용한 선형회귀분석. 교우사.</li>
+<li>[2] 한치록 (2024). 계량경제학 강의 (5판). 박영사.</li>
+</ul></li>
+<li>패널데이터 분석 관련
+<ul>
+<li>[3] Frees (2004). Longitudinal and Panel Data: Analysis and Applications in the Social Sciences. Cambridge University Press.</li>
+<li>[4] 김양진 (2020). R과 SAS를 활용한 경시적 자료분석. 자유아카데미.<br>
+</li>
+<li>[5] 한치록 (2024). 패널데이터강의 (4판). 박영사.</li>
+</ul></li>
+</ul></li>
+<li>교재들의 구매필요 여부는 추후공지</li>
+</ul>
+</section>
+<section id="성적-및-평가" class="level3">
+<h3 class="anchored" data-anchor-id="성적-및-평가">4. 성적 및 평가</h3>
+<ul>
+<li>출석 10%, 과제 45%, 프로젝트 45%</li>
+<li>과제: 이론/실습의 숙달 및 프로젝트 구상을 돕기 위한 연습문제들</li>
+<li>프로젝트: 본인이 관심있는 연구주제와 데이터를 골라서, 수업시간에 다루어진 기법들을 활용하여 간단한 자료탐색과 분석을 진행
+<ul>
+<li>프로포절: 8주차 월, 5분 발표, 5분 질의응답</li>
+<li>본발표: 16주차 월, 25분 발표, 10분 질의응답</li>
+<li>보고서 제출기한: 16주차 금
+<ul>
+<li>양적연구 논문의 형식을 갖출 것 (서론 / 연구방법 / 결과 / 해석)</li>
+<li>분량은 10매 이내 (기준: 표와 그림 포함, 참고문헌 제외)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="강의-주제" class="level3">
+<h3 class="anchored" data-anchor-id="강의-주제">5. 강의 주제</h3>
+<ul>
+<li>회귀분석
+<ul>
+<li>시각화를 통한 탐색적 자료분석</li>
+<li>관측치가 하나일 때의 기본적 회귀분석모형
+<ul>
+<li>단순선형회귀모형 (simple linear regression)</li>
+<li>다중선형회귀모형 (multiple linear regression)</li>
+<li>로지스틱 선형회귀모형 (logistic linear regression)</li>
+<li>일반화 선형모형 (generalized linear model)</li>
+</ul></li>
+</ul></li>
+<li>경시적 자료의 회귀분석
+<ul>
+<li>시각화를 통한 탐색적 자료분석</li>
+<li>반응변수가 연속형인 경시자료에 대한 선형모형
+<ul>
+<li>고정효과모형 (fixed effect model)</li>
+<li>임의효과모형 (random effect model)</li>
+<li>혼합효과모형 (mixed effect model)</li>
+</ul></li>
+<li>반응변수가 범주형인 경시자료에 대한 선형모형
+<ul>
+<li>일반화 선형혼합모형 (generalized linear mixed effect model)</li>
+<li>일반화 추정방정식 (generalized estimating equation)</li>
+</ul></li>
+</ul></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -641,8 +733,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./R-1-basics.html" class="pagination-link" aria-label="R - 기초 연산">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R - 기초 연산</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

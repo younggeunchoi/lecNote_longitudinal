@@ -1,0 +1,460 @@
+# R - 데이터(테이블) 다루기
+
+Acknowledgement: 본 절의 구성에는 다음 교재를 발췌하였다.
+
+- Norman Matloff 지음, 권정민 역 (2012). 빅데이터 분석 도구 R 프로그래밍 (원제 The Art of R Programming). 에이콘.
+
+
+## 개요
+
+-   데이터 프레임 (data.frame) : 길이가 동일한 수치/문자열/논리 벡터들을 열별로 합쳐놓은 자료형. 지난 세션까지는 벡터 자료형과 행렬 자료형만 주로 다루었다. 벡터와 행렬 모두 한 객체에 동일한 유형 (수치형이면 수치형, 문자열이면 문자열)만 저장할 수 있다. 그러나 보통의 테이블 자료(tabular data)는 열(필드)마다 수치/문자열/논리 유형이 다른 복합 테이블이므로, R의 행렬 자료형은 테이블 자료를 담기에 적절하지 않고, 데이터 프레임으로 담아낼 수 있다.
+
+-   리스트 (list) : 리스트는 여러 객체들의 단순 모음이다. 서로 다른 길이의 벡터, 행렬, 문자열, 혹은 다른 리스트도 모아놓을 수 있다.
+
+## 리스트
+
+### 리스트의 생성 및 접근
+
+-   리스트는 생성법은 아래와 같다.
+
+```{r}
+a = c("David", "Brownie")
+b = 100
+c = matrix(1:4, nrow = 2)
+mylist = list(u = a, v = b, w = c)
+mylist
+```
+
+-   리스트의 각 구성요소는 \$ 기호를 이용하여 접근할 수 있다. 혹은 double bracket \[\[\]\]으로 접근이 가능하다.
+
+```{r}
+mylist = list( u = c("David", "Brownie"), v = 100, w = matrix(1:4, nrow = 2) )
+mylist$u
+mylist$w
+mylist[[1]]
+mylist[[2]]
+mylist[[3]]
+mylist$w[2, 1]
+```
+
+### 리스트의 활용
+
+-   주로 함수를 만들 때 여러 종류의 변수를 한꺼번에 반환하고 싶은 경우 리스트를 활용한다. 예를 들면 아까 qr() 함수도 한꺼번에 여러 변수를 리스트로 리턴하였다. 따라서 qr() 함수의 결과에 접근하려면 \$을 이용해야 한다.
+
+```{r}
+mat = matrix(1:4, nrow = 2, byrow = T)
+qr(mat)
+qr(mat)$qr
+Q = qr(mat)
+Q$qr
+```
+
+## 데이터 프레임
+
+### 데이터 프레임의 생성 및 접근
+
+-   데이터 프레임도 2차원 사각형의 성분에 자료를 저장한 것이다. 언뜻 보면 행렬과 비슷해 보인다. 가장 큰 차이는, 행렬은 모든 성분의 변수형이 동일(문자형만 저장 혹은 실수형만 저장)해야 하나 데이터 프레임은 여러 변수형의 자료를 한 곳에 저장할 수 있다는 것이다. 뿐만 아니라 데이터 프레임은 변수명, 관측치 번호 등 여러 정보를 동시에 저장해준다.
+
+```{r}
+name = c("David", "Brownie", "John")
+age = c(20, 10, 23)
+score = c(10, 9, 10)
+mydata = data.frame(name, age, score)
+mydata
+```
+
+-   데이터 프레임 형식의 자료는 행렬처럼 접근할 수도, 리스트처럼 접근할 수도 있다.
+
+```{r}
+mydata = data.frame(name = c("David", "Brownie", "John"),
+			age = c(20, 10, 23), score = c(10, 9, 10))
+mydata[ ,1]
+mydata[1, ]
+mydata$name
+```
+
+## 파일 입출력
+
+-   원자료(raw data)를 다른 파일에서 읽어들이고, 혹은 가공한 자료를 외부 파일로 내보내는 기능이 필요할 때가 많다. 지금은 txt(텍스트) 형식으로 행렬 / 데이터 프레임을 입출력하는 방법에 대해 알아보자.
+
+### 파일 출력
+
+-   위의 mydata를 텍스트 파일로 출력하고 싶다면? write.table() 함수를 이용한다. 아래의 코드에서, 저장할 파일의 주소를 입력할 때 백슬래시()가 아닌 슬래시(/)를 쓴다는 점에 주의하자. 코드를 실행한 후에 저장이 잘 됐는지 확인해 보라.
+
+```{r}
+getwd()
+mydata = data.frame(name = c("David", "Brownie", "John"),
+			age = c(20, 10, 23), score = c(10, 9, 10))
+write.csv(mydata, '/Users/cyg/Dropbox/Documents/Teaching/2024g-longitudinal/lecNote_longitudinal/CS_mydata.csv')
+```
+
+-   위에서 저장한 텍스트 파일을 열어보면 다음과 같이 자료가 공백으로 구분되어 저장되어 있다. 열 이름과 행 이름도 포함되었다.
+
+```         
+"name" "age" "score"
+"1" "David" 20 10
+"2" "Brownie" 10 9
+"3" "John" 23 10
+```
+
+-   만약 열 이름은 저장하되 행 이름을 저장하고 싶지 않다면?
+
+```         
+write.table(mydata, '(경로)/CS_mydata_nonames.txt', row.names=FALSE, col.names=TRUE) 
+```
+
+-   위와 같이 저장하고 텍스트 파일을 열어 보면,
+
+```         
+"David" 20 10
+"Brownie" 10 9
+"John" 23 10
+```
+
+### 파일 입력
+
+-   CS_mydata.txt에는 첫째줄에 각 열의 이름이 적혀 있다. 이런 파일을 읽어들이려면?
+
+```         
+X = read.csv("(경로)/CS_mydata.csv", header=TRUE)
+X 
+     name age score
+1   David  20    10
+2 Brownie  10     9
+3    John  23    10
+```
+
+-   파일에 열/행의 이름(header)가 존재하냐 여부에 따라 read.table의 header 옵션을 조정해 주면 된다. 사실 R은 나름 똑똑하기 때문에 웬만한 자료는 굳이 header 옵션을 넣지 않아도 상황에 맞게 인식하긴 하나, 만약을 위해 알아두자.
+
+### 예제 1.
+
+다음과 같은 데이터 프레임 scoretable이 있다.
+
+```         
+> scoretable
+     name math english physics
+1   Stark   52      45      72
+2   Stacy   22      84      73
+3    John   59      31      90
+4 Brownie   84      29      75
+5     Sam   71      73      30
+6  Sherry   56      19      82
+```
+
+-   
+
+    (1) 위 데이터 프레임에 학생별 평균 column과 총점 column을 추가하여 새로운 데이터 프레임 scoretable.new를 얻고 이를 `e:\CS\scoretablenew.csv`로 저장코자 한다. 이를 위한 코드를 작성하여라.
+
+-   
+
+    (2) (1)에서 만든 데이터 프레임 scoretable.new, 과목별 평균점수의 벡터 subject.mean, 과목별 총점의 벡터 subject.sum을 구성요소로 하는 리스트 scoretable.list를 작성하고자 한다. 이를 위한 코드를 작성하여라.
+
+-   (Hint : for 함수를 이용해서 열별/행별로 평균 및 합을 계산하는 것이 가장 기본적이나, 이제부터는 함수 rowSums(), rowMeans(), colSums(), colMeans()를 이용하자. 네 함수 모두 input 인자는 행렬이다. 행렬 하나를 만든 다음에 위 함수들을 테스트해 보면 금방 그 뜻과 사용법을 알 것이다.)
+
+-   
+
+    (1) 
+
+```
+stu.mean = rowMeans( scoretable[ ,-1] ) # 1열에는 문자형 자료가 있으므로 1열 제거
+stu.sum = rowSums( scoretable[ ,-1] )
+
+scoretable.new = data.frame(scoretable, mean = stu.mean, sum = stu.sum)
+write.csv(scoretable.new, "(경로)/scoretablenew.csv", row.names=FALSE, col.names=TRUE)
+```
+
+-   
+
+    (2) 
+
+```
+
+subject.mean = colMeans( scoretable[ ,-1] )
+subject.sum = colSums( scoretable[ ,-1] )
+
+scoretable.list = list(scoretable.new, subject.mean, subject.sum)
+
+```
+
+## 필터링
+
+-   통계 분석에서는 관심사에 따라 특정 조건을 만족하는 데이터만 보는 일이 잦을 것이다. 가령 인구 자료가 있다면 특정 지역에 사는 사람이나 특정 키 이상의 사람들만 따로 보고 싶을 수도 있다. 이런 문제들을 잘 생각해보면, x = c(7, 2, 30, 6, 9)에 대해 다음과 같은 과제들을 해결하는 것과 본질적으로 (거의) 같다.
+  -  1) x에서 8보다 큰 성분의 index 검색
+  -  2) x에서 8보다 큰 성분만 골라 0으로 변경
+  -  3) x의 성분들을 오름차순/내림차순으로 정렬
+
+물론 for (i in 1:5)... 로 시작하는 구문을 이용하여 인덱스 하나하나에 대해 8보다 큰지 if문을 통해 물어보고 맞으면 그 index를 …… 하는 방법으로 위의 문제에 대처할 수는 있다. R에서는, 머리를 좀 굴린다는 전제 하에 매우 간단하게 할 수 있다.
+
+-   벡터 a에 대하여 a\[index\]로 특정 성분 및 특정 성분 몇 개를 동시에 불러올 수 있음을 세션 1에 학습하였다. 좀 더 보충할 것이 있다. 먼저, 호출할 index는 중복 및 순서변경이 가능함을 기억하자. 추후에 사용될 때가 있다.
+
+```{r}
+x = c(7, 2, 30, 6, 9)
+x[ c(4, 3, 3, 5, 1, 1) ]
+```
+
+-   논리형 벡터를 이용하여 특정 성분만을 불러올 수도 있다. 이 때 논리형 벡터의 길이는 접근 대상 벡터의 길이와 같아야 한다. 만약 길이가 다르면 의도치 않은 값들도 출력된다.
+
+```{r}
+x = c(7, 2, 30, 6, 9)
+x[ c(T, F, T, T, F) ] 
+	# x[ c(TRUE, FALSE, TRUE, TRUE, FALSE) ] 라 쓰는 것과 똑같다.
+x[ c(T, F, T, T, F, T, F) ]
+```
+
+-   R은 논리문(참거짓을 판단할 수 있는 문장)에 대해 TRUE/FALSE를 판정하는 기능이 있음을 학습하였다. R은 벡터와 친하다는 것도 기억하는가? R은 벡터 통째로도 T/F를 판정해줄 수 있다.
+
+```{r}
+a = 4 ; x = c(7, 2, 30, 6, 9)
+a > 8
+x > 8
+```
+
+-   이쯤하면 아까 제기된 문제 ①, ②에 답할 준비가 끝났다. 먼저 ①부터. which() 함수는 논리형 벡터에 대해 TRUE인 index만을 출력해 주는 함수이다. 이것을 이용하면 ①은 해결.
+
+```{r}
+which( c(F, F, T, F, T) )
+which( x > 8 )
+```
+
+-   두 명령어가 왜 같은 답을 주는가?
+
+-   ②를 해결하여 보자. 아래 명령어들이 사실 모두 같은 말을 하고 있다는 것이 포인트. 반복적인 실험을 위해 원본 x로부터 사본 y를 복사해서 쓰자.
+
+```{r}
+
+x = c(7, 2, 30, 6, 9)
+y = x
+y[ c(3, 5) ] = 0
+y
+
+y = x
+y[ which(y > 8) ] = 0
+y
+
+y = x
+y[ c(F, F, T, F, T) ] = 0
+y
+
+y = x
+y[ y > 8 ] = 0
+y
+```
+
+-   논리 연산자에는 ‘!’(not), ‘\|’(or), ‘&’(and)도 있다. 이를 활용하면, 이를테면 ‘8보다 크고 15보다 작다’ 같은 조건도 쓸 수 있다. 다음은 필터링의 기본적인 변주법이다.
+
+```{r}
+a = c(10, 15, 1, 5, 12) ; x = c(7, 2, 30, 6, 9)
+b = a ; y = x
+```
+
+-   y에서 제곱이 40보다 작은 성분들의 index는? 혹은 그러한 성분들을 0으로 만들기
+
+```{r}
+which( y^2 < 40 )
+y[ y^2 < 40 ] = 0
+y
+```
+
+-   b에서 10보다 작거나 같은 성분들의 번호에 대응하는 y의 성분들을 0으로 만들기
+
+```{r}
+y = x
+y[ b <= 10 ] = 0
+y
+```
+
+-   b에서 5와 15 사이에 있는 성분들의 index는?
+
+```{r}
+which( (b >= 5) & (b <= 15) )
+```
+
+-   ③을 해결하려면 order() 함수가 필요하다. order(x)는 x 벡터에서 성분이 가장 작은 index부터 차례대로 나열해주는 함수이다. rank(x)와는 조금 다르다.
+
+```{r}
+x = c(7, 2, 30, 6, 9)
+order(x)
+rank(x)
+x[ c(2, 4, 1, 5, 3) ]
+x[ order(x) ]
+```
+
+-   내림차순으로 정렬하려면? order 명령어에서 order(x, decreasing=TRUE) 라고 새로 옵션을 추가하면 된다.
+
+```{r}
+x = c(7, 2, 30, 6, 9)
+order(x, decreasing=TRUE)
+x[order(x, decreasing=TRUE)]
+```
+
+-   위의 논의들이 행렬 혹은 데이터 프레임에 적용되면 필터링 기술의 진가가 드디어 발휘된다. 코드를 입력할 때마다 결과를 예측해보고, 확인하고, 이유를 생각해 보자. 이 부분이 실제 데이터 분석에서 가장 많이 쓰인다. 결과 생략.
+
+```{r}
+
+name = c("A", "B", "C", "D", "E")
+math = c(69, 19, 74, 53, 90)
+eng = c(28, 85, 74, 57, 91)
+data = data.frame(name, math, eng)
+
+# 수학이 50점 이상인 사람만 출력
+data[ (data$math >= 50) , ]
+
+# 이름순 나열
+data[ order(data$name), ]
+
+# 총점을 계산하여 총점순으로 나열
+total = data$math + data$eng
+data = data.frame(data, total)
+order.total = order(total, decreasing=TRUE)
+data[ order.total , ]
+```
+
+-   행렬 혹은 데이터 프레임에서 특정 조건을 만족하는 성분에 특정 값을 대입할 수도 있다.
+
+```{r}
+# 수학이 50점 이하인 사람을 50점으로 고정
+data$math[ (data[ ,2] <= 50) ] = 50
+```
+
+(5) NA / NULL의 활용
+
+-   NA/NULL값은 실제 통계 분석에서 많이 사용된다. NA는 결측의 의미로 사용된다. NULL은 아무 것도 없는 상태를 나타내기 위해 쓰인다. 특히 특정 성분이 NA인지, NULL인지 검출하는 문장이 유용하다.
+
+**Remark.** NA나 NULL은 문자형 상수가 아니다. 예를 들면, a = “NA”라고 입력하는 것과 a = NA라고 입력하는 것은 전혀 다르다.
+
+```{r}
+name = c("A", "B", "C", "D", "E")
+math = c(69, NA, 74, 53, 90)
+eng = c(28, 85, 74, 57, NA)
+eng2 = c(28, 85, 74, 57, NULL)
+data = data.frame(name, math, eng)
+# data2 = data.frame(name, math, eng2)  # 에러 발생
+```
+
+-   수학이 결측인 학생 출력
+
+```{r}
+is.na(data$math)
+data$math == NA      # c(NA, NA, NA, NA, NA) 출력될 것임 - 옳은 문법이 아님 
+data$name[ is.na(data$math) ]
+
+```
+
+-   결측치에 0점 입력
+
+```{r}
+data$math[ is.na(data$math) ] = 0
+data$eng[ is.na(data$eng) ] = 0
+# data[ is.na(data) ] = 0 해도 됨
+
+```
+
+## R 요약
+
+### 연산
+
+-   R은 벡터/행렬 단위의 연산이 가능, 길이가 다른 두 벡터의 연산에서는 만나면 짧은 벡터가 알아서 반복되며 긴 벡터와 길이를 강제로 맞춤
+
+-   기본적인 이항 연산자
+    -   대입: =, \<-
+    -   산술 계산: +, -, `*`, /, `%%(mod)`, \^, `%*%`
+    -   양변의 비교: ==, !=(not equal to), \>=, \>, \<=, \<
+    -   논리문의 결합: &(and), \|(or), !(not)
+
+-   기본적인 수치 연산 함수 (numeric 형 벡터/행렬에서만 가능)
+    -   초등 초월함수: abs(), exp(), log(), log10(), sin(), cos(), tan(), asin(), acos(), atan()
+    -   소수 자리의 처리: trunc(), round(), ceiling(), floor()
+    -   행렬 연산: t(), tr(), rank(), solve(), qr(), svd()
+    -   기타 (벡터-\>스칼라): sum(), mean(), max(), min()
+
+### 객체
+
+-   자료형별 객체생성법
+    -   벡터: c(), rep(), seq(), (number):(number), as.vector(matrix)
+    -   행렬: matrix(), diag(), cbind(), rbind()
+    -   리스트: list()
+    -   데이터 프레임: data.frame()
+
+-   개체 성분들의 유형 : character, logical, numeric, complex 등
+
+-   자료형별 객체 접근법
+    -   벡터 x: x, x\[4\], x\[c(2,5)\], x\[-c(2,3)\], x\[c(TRUE, FALSE, TRUE)\]
+    -   행렬 x: x\[ , \], x\[\]. input argument는 벡터에서와 똑같이
+    -   리스트 x: x, x\$NAME1
+    -   데이터 프레임 x: x\$NAME1, x\[ , \]
+
+-   외부 csv 파일로의 입출력 : read.csv(file, header=?), write.csv(data, file, row.names=?, col.names=?)
+
+    -   read.table은 데이터 프레임의 형태로 데이터를 읽음, 연산을 원한다면 원자료에서 특정 행과 열을 데이터에서 취한 뒤에 as.matrix()나 as.vector()을 하여 연산이 가능한 형태로 바꾸어야 함 eg) data=read.table(...) ; X = as.matrix(data\[,-1\])
+
+### 함수
+
+-   생성 : 함수이름 = function(a, b, c....) {... ; ... ; return(something) }
+-   호출 : 함수이름(a=xxx, b=xxx, c=xxx), 위에서 지정된 something이 반환됨
+-   기본값 지정 가능 eg) myftn = function(a, b=4) {..}
+-   함수 내부에서 사용되는 변수는 지역변수
+
+### 조건문 if
+
+-   사용법 : if (논리문) {....} else {....}
+-   논리문 자리에는 참/거짓을 판단할 수 있는 스칼라 형태의 문장을 사용 eg) 2==3 (O), c(1,2)==c(2,3) (X)
+-   else를 쓰려면, else와 else 앞의 ‘}’ 사이에 세미콜론이나 엔터키가 없어야 함
+
+### 반복문 for
+
+-   사용법 : for (i in (vector)) {......}
+-   i가 (vector)의 값들을 순차적으로 취하면서 {} 안의 명령을 반복 수행
+-   (특정 조건 하에서) break으로 for문 탈출 가능
+
+### 행렬/벡터 단위의 정렬과 연산
+
+-   아래에 등장하는 코드들의 작동원리 및 결과를 반드시 이해하고 있어야 한다.
+
+```{r}
+a = c(7, 2, 30, 6, 9) ; X = matrix(1:16, ncol=4)
+which(a >= 2)
+a[ (a >= 1) & (a <= 4) ] = NA
+X[ (X %% 2) == 1 ] = 0
+X[ upper.tri(X) ] = 1000
+X[ row(X) > col(X) ] = 5000
+```
+
+-   정렬
+
+```{r}
+x = c(7, 2, 30, 6, 9)
+order(x) 
+order(x, decreasing=TRUE)
+rank(x)
+x[ order(x) ]
+```
+
+-   정렬과 필터링의 조합(★)
+
+```{r}
+name = c("DH", "YE", "SH", "YG", "JH", "YS", "HS")
+math = c(69, 19, 74, 53, 90, 14, 67)
+eng = c(28, 85, 74, 57, 91, 27, 14)
+data = data.frame(name, math, eng)
+
+data[ (data[ ,2] >= 50), ]	# 수학이 50점 이상인 사람만 출력
+
+data[ order(data[ ,1]), ]		# 이름순 나열
+
+# 총점을 계산하여 총점순으로 나열
+total = as.vector(data[ ,2]) + as.vector(data[ ,3])
+data = data.frame(data, total)
+order.total = order(total, decreasing=TRUE)
+data[ order.total , ]
+
+```
+
+-   apply()의 활용 (★)
+
+```{r}
+mynorm = function(x) return( sum(x^2) )
+maxmin = function(x) return( c(max(x), min(x)) )
+X = matrix(1:16, 4, 4)
+apply(X, 1, mean)
+apply(X, 2, mynorm)
+```

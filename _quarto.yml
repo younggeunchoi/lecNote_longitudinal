@@ -2,15 +2,16 @@ project:
   type: book
 
 book:
-  title: "lecNote_longitudinal"
-  author: "Norah Jones"
+  title: "CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석"
+  author: "최영근" 
   date: "8/30/2024"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
-    - references.qmd
-
+    - R-1-basics.qmd
+    - R-2-vec-mat.qmd
+    - R-3-statements.qmd
+    - R-4-list-dfs-io.qmd
+    
 bibliography: references.bib
 
 format:
@@ -19,5 +20,5 @@ format:
   pdf:
     documentclass: scrreprt
 
-editor: visual
+editor: source
 
