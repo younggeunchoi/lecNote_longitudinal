@@ -11,6 +11,8 @@ book:
     - R-2-vec-mat.qmd
     - R-3-statements.qmd
     - R-4-list-dfs-io.qmd
+    - R-5-vis-basic.qmd
+    - simple-linear-regression.qmd
     
 bibliography: references.bib
 

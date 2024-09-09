@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석 - 6&nbsp; 단순선형회귀모형 (simple linear regression model)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./R-5-vis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./simple-linear-regression.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">강의계획서</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-1-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R - 기초 연산</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-2-vec-mat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R - 행렬과 벡터</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-3-statements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R - 조건문, 반복문, 함수를 이용한 프로그래밍</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-4-list-dfs-io.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R - 데이터(테이블) 다루기</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-5-vis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R - 시각화 기본</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./simple-linear-regression.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#회귀분석-개요" id="toc-회귀분석-개요" class="nav-link active" data-scroll-target="#회귀분석-개요"><span class="header-section-number">6.1</span> 회귀분석 개요</a>
+  <ul class="collapse">
+  <li><a href="#불완전한-관계의-분석" id="toc-불완전한-관계의-분석" class="nav-link" data-scroll-target="#불완전한-관계의-분석"><span class="header-section-number">6.1.1</span> 불완전한 관계의 분석</a></li>
+  </ul></li>
+  <li><a href="#모형-가정" id="toc-모형-가정" class="nav-link" data-scroll-target="#모형-가정"><span class="header-section-number">6.2</span> 모형 가정</a></li>
+  <li><a href="#최소제곱법least-squares-method에-의한-모형계수의-추정" id="toc-최소제곱법least-squares-method에-의한-모형계수의-추정" class="nav-link" data-scroll-target="#최소제곱법least-squares-method에-의한-모형계수의-추정"><span class="header-section-number">6.3</span> <strong>최소제곱법(least squares method)</strong>에 의한 모형계수의 추정:</a></li>
+  <li><a href="#예측오차잔차와-결정계수" id="toc-예측오차잔차와-결정계수" class="nav-link" data-scroll-target="#예측오차잔차와-결정계수"><span class="header-section-number">6.4</span> 예측오차(잔차)와 결정계수</a>
+  <ul class="collapse">
+  <li><a href="#결정계수-r2" id="toc-결정계수-r2" class="nav-link" data-scroll-target="#결정계수-r2"><span class="header-section-number">6.4.1</span> 결정계수 <span class="math inline">\(R^2\)</span></a></li>
+  </ul></li>
+  <li><a href="#회귀모형에서의-통계적-추론" id="toc-회귀모형에서의-통계적-추론" class="nav-link" data-scroll-target="#회귀모형에서의-통계적-추론"><span class="header-section-number">6.5</span> 회귀모형에서의 통계적 추론</a>
+  <ul class="collapse">
+  <li><a href="#회귀분석기반의-통계적-추론을-위한-가정" id="toc-회귀분석기반의-통계적-추론을-위한-가정" class="nav-link" data-scroll-target="#회귀분석기반의-통계적-추론을-위한-가정"><span class="header-section-number">6.5.1</span> 회귀분석(기반의 통계적 추론)을 위한 가정</a></li>
+  <li><a href="#회귀모형에서의-통계적-추론-관련-주요-결과" id="toc-회귀모형에서의-통계적-추론-관련-주요-결과" class="nav-link" data-scroll-target="#회귀모형에서의-통계적-추론-관련-주요-결과"><span class="header-section-number">6.5.2</span> 회귀모형에서의 통계적 추론 관련 주요 결과</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Acknowledgement: 본 절의 구성에는 다음 교재를 발췌하였다.</p>
+<ul>
+<li>조정우 &amp; 김현철 (2023), 교육통계학, 법문사.</li>
+<li>강근석, 유현조 (2016). R을 활용한 선형회귀분석. 교우사.</li>
+</ul>
+<section id="회귀분석-개요" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="회귀분석-개요"><span class="header-section-number">6.1</span> 회귀분석 개요</h2>
+<section id="불완전한-관계의-분석" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="불완전한-관계의-분석"><span class="header-section-number">6.1.1</span> 불완전한 관계의 분석</h3>
+<ul>
+<li>두 변수 사이의 관계를 나타내는 법
+<ul>
+<li>함수적 관계(functional relation): 한 변수의 값을 알면 다른 변수의 값이 정확히 결정되는 관계 e.g.&nbsp;한 주차장의 (주차시간, 주차료)</li>
+<li>통계적 관계(statistical relation): 한 변수에 대응되는 다른 변수의 값이 정확히 하나의 값으로 결정되지는 않는 관계 e.g.&nbsp;(교육비, 미래소득); (인센티브, 총득점); 또는 아래 표의 (아버지 키, 아들 키)</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">index</th>
+<th style="text-align: right;">father</th>
+<th style="text-align: right;">son</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">167.20</td>
+<td style="text-align: right;">167.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">168.85</td>
+<td style="text-align: right;">169.94</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">177.79</td>
+<td style="text-align: right;">173.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">170.35</td>
+<td style="text-align: right;">169.48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">170.65</td>
+<td style="text-align: right;">168.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">178.58</td>
+<td style="text-align: right;">174.20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">172.30</td>
+<td style="text-align: right;">169.58</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">163.67</td>
+<td style="text-align: right;">163.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">166.57</td>
+<td style="text-align: right;">167.52</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">167.77</td>
+<td style="text-align: right;">170.72</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li><p>통계적 관계에서는 <strong>임의의 오차</strong>가 있다는 가정 하에 두 변수간의 관계를 확률 모형으로 나타낸다.</p>
+<ul>
+<li><strong>단순회귀모형(simple regression model)</strong>: 설명변수(explanatory variable, predictor variable, independent variable <span class="math inline">\(X\)</span>) 1개, 반응변수(response variable, dependent variable <span class="math inline">\(Y\)</span>) 1개</li>
+<li><strong>다중회귀모형(multiple regression model)</strong> 혹은 중회귀모형: 설명변수 여러개, 반응변수 1개</li>
+</ul></li>
+<li><p>단순선형회귀분석을 먼저 다룬 뒤 다중선형회귀분석을 다루도록 한다.</p></li>
+<li><p>역사적 배경 (단어 ``회귀’’의 어원)</p>
+<ul>
+<li>회귀(回歸)라는 용어는 영국의 생물학자 프랜시스 골턴(Francis Galton)이 아버지의 키와 아들의 키의 관계를 분석한 연구에서 처음 사용되었다.</li>
+<li>골턴은 아들들의 키가 아버지들의 키를 닮아가는 경향과 함께, 전체 평균키로 회귀하는 현상을 발견하였다. 이를 ’평범으로의 회귀(regression towards mediocrity)’라고 설명했다.</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="simple-linear-regression_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="모형-가정" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="모형-가정"><span class="header-section-number">6.2</span> 모형 가정</h2>
+<ul>
+<li>단순선형회귀분석의 모형가정:</li>
+</ul>
+<p><span class="math display">\[E(Y | X=x) = \alpha + \beta x. \tag{1}\]</span></p>
+<ul>
+<li><p>즉, <span class="math inline">\(X=x\)</span>에 대한 <span class="math inline">\(Y\)</span>의 조건부 기댓값이 <span class="math inline">\(x\)</span>의 선형식이라고 가정한다. 여기서 <span class="math inline">\(\alpha\)</span>와 <span class="math inline">\(\beta\)</span>는 알려지지 않은 모수(unknown true parameter)이다.</p></li>
+<li><p>기울기항 <span class="math inline">\(\beta\)</span>의 해석</p>
+<ul>
+<li><span class="math inline">\(X\)</span>가 연속형 확률변수의 경우: <span class="math inline">\(X\)</span>가 1단위 증가할 때 <span class="math inline">\(Y\)</span>의 평균 변화량</li>
+<li><span class="math inline">\(X\)</span>가 이진형 (0,1)인 경우: 기준 범주(0)에 대한 다른 범주(1)와의 평균 차이</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="simple-linear-regression_files/figure-html/plot1-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Equivalent definitions: <strong>잡음(noise)</strong> 또는 <strong>오류(error)</strong>를 대표하는 확률변수 <span class="math inline">\(\epsilon\)</span>를 도입하면 위 식 대신 아래 식으로 모형을 정의할 수 있다. <span class="math inline">\(\epsilon\)</span>은 측정 오차나 모형에 포함되지 않은 다른 변수들의 영향을 나타낸다고도 할 수 있다. 1식과 2식은 동치이다.</li>
+</ul>
+<p><span class="math display">\[Y = \alpha + \beta X + \epsilon, \qquad \mbox{where} \qquad E(\epsilon|X=x)=0 ~~~\mbox{for any}~~ x \tag{2}\]</span></p>
+<ul>
+<li>용어들: 하나의 관찰된 자료점 <span class="math inline">\((x_i, y_i)\)</span>은 아래와 같이 분해하여 생각할 수 있다.
+<ul>
+<li><span class="math inline">\(y_i\)</span>: 반응변수의 <strong>실제값(true value)</strong></li>
+<li>(상수 <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>가 주어졌을 때) <span class="math inline">\(\hat{y}_i := a + b x_i\)</span>: <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>를 이용한 <span class="math inline">\(y_i\)</span>의 <strong>예측값(predicted value)</strong> 또는 <strong>적합값(fitted value)</strong>이라 부른다. 또한 이 맥락에서 일차계수 <span class="math inline">\(b\)</span>는 <strong>기울기(slope)</strong>, 상수계수 <span class="math inline">\(a\)</span>는 <strong>절편(intercept)</strong>이라 부른다.</li>
+<li><span class="math inline">\(y_i - \hat{y}_i = y_i - (a + b x_i)\)</span>: <strong>잔차(residual)</strong></li>
+</ul></li>
+</ul>
+</section>
+<section id="최소제곱법least-squares-method에-의한-모형계수의-추정" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="최소제곱법least-squares-method에-의한-모형계수의-추정"><span class="header-section-number">6.3</span> <strong>최소제곱법(least squares method)</strong>에 의한 모형계수의 추정:</h2>
+<ul>
+<li><span class="math inline">\(\{(X_i, Y_i)\}_{i=1}^n\)</span>이 관찰된 자료점들이라 하자. <strong>최소제곱법</strong>은 실제값과 예측값의 차이 (<strong>잔차; residual</strong>)의 제곱합을 최소화하는 <span class="math inline">\((\alpha, \beta)\)</span>를 true <span class="math inline">\((\alpha, \beta)\)</span>의 추정량으로 제안하는 방법이다.</li>
+</ul>
+<p><span class="math display">\[(\hat{\alpha}, \hat{\beta}) = \underset{\alpha, \beta \in \mathbb{R}}{\rm argmin} \left[ \sum_{i=1}^n \{ Y_i - (\alpha + \beta X_i ) \}^2 \right]\]</span></p>
+<ul>
+<li><p>이론적으로, 표본 <span class="math inline">\(\{(X_i, Y_i)\}_{i=1}^n\)</span>이 <span class="math inline">\((X,Y)\)</span>의 임의표본일 경우(즉 iid일 경우), 최소제곱법의 해는 모형가정의 true parameter <span class="math inline">\((\alpha, \beta)\)</span>를 “가장 잘” 근사함이 알려져 있다.</p></li>
+<li><p>최소제곱법을 풀어보자. <span class="math inline">\(\phi(\alpha, \beta) = \sum_{i=1}^n \{ Y_i - (\alpha + \beta X_i ) \}^2\)</span>으로 두고 <span class="math inline">\(\nabla \phi(\alpha, \beta) = 0\)</span>을 풀면 다음과 같이 <span class="math inline">\((\hat{\alpha}, \hat{\beta})\)</span>의 closed-form solution을 얻을 수 있다:</p></li>
+</ul>
+<p><span class="math display">\[\hat{\beta} = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y}) }{\sum_{i=1}^n (X_i - \bar{X})^2 } =: \frac{SS_{XY}}{SS_{XX}}\]</span></p>
+<p><span class="math display">\[\hat{\alpha} = \bar{Y} - \hat{\beta} \bar{X}\]</span></p>
+<ul>
+<li>Comments
+<ul>
+<li>기울기의 추정량 <span class="math inline">\(\hat{\beta}\)</span>는 표본(공)분산과 표본상관관계를 이용하여도 표현가능하다. <span class="math display">\[\hat{\beta} = r_{XY} \frac{s_Y}{s_X}\]</span> 여기서 <span class="math inline">\(r_{XY}\)</span>는 <span class="math inline">\(X\)</span>와 <span class="math inline">\(Y\)</span> 간의 표본상관계수, <span class="math inline">\(s_X\)</span>와 <span class="math inline">\(s_Y\)</span>는 각각 <span class="math inline">\(X\)</span>와 <span class="math inline">\(Y\)</span>의 표본표준편차이다. 달리 말하면, 만약 <span class="math inline">\(X\)</span>와 <span class="math inline">\(Y\)</span>가 각각 표준화되어 있다면, <span class="math inline">\(\hat{\beta}\)</span>값은 <span class="math inline">\(X\)</span>와 <span class="math inline">\(Y\)</span> 간의 표본상관계수와 정확히 일치한다.</li>
+<li>최소제곱법으로 적합된 추세선의 방정식: <span class="math display">\[y = \hat{\alpha} + \hat{\beta} x = \bar{Y} - r_{XY} \frac{s_Y}{s_X} ( x - \bar{X})\]</span></li>
+<li>최소제곱법으로 적합된 추세선은 반드시 <span class="math inline">\((\bar{X}, \bar{Y})\)</span>을 지난다.</li>
+</ul></li>
+<li>R에서는 <code>lm()</code> 함수가 최소제곱법을 구현한다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 실습 목적으로 가상의 골턴 데이터 생성</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>father_height <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">170</span>, <span class="dv">5</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>son_height <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> father_height <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">85</span>, <span class="dv">2</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 모형 적합 및 결과 출력</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>model_galton <span class="ot">&lt;-</span> <span class="fu">lm</span>(son <span class="sc">~</span> father, <span class="at">data =</span> galton_data)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_galton)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = son ~ father, data = galton_data)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-3.815 -1.367 -0.175  1.161  6.581 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 88.36246    7.28966   12.12   &lt;2e-16 ***
+father       0.47901    0.04275   11.21   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.941 on 98 degrees of freedom
+Multiple R-squared:  0.5616,    Adjusted R-squared:  0.5571 
+F-statistic: 125.5 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<ul>
+<li><code>ggplot</code> 라이브러리는 산점도 및 추세선을 간단하게 시각화할 수 있다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 산점도 및 회귀선 그리기</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(galton_data, <span class="fu">aes</span>(<span class="at">x =</span> father, <span class="at">y =</span> son)) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(son_height), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(father_height), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Father's height"</span>, <span class="at">y =</span> <span class="st">"Son's height"</span>, <span class="at">title =</span> <span class="st">"Simulated data for Golton's height study"</span>) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="simple-linear-regression_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="예측오차잔차와-결정계수" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="예측오차잔차와-결정계수"><span class="header-section-number">6.4</span> 예측오차(잔차)와 결정계수</h2>
+<section id="결정계수-r2" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="결정계수-r2"><span class="header-section-number">6.4.1</span> 결정계수 <span class="math inline">\(R^2\)</span></h3>
+<ul>
+<li>아래 그림을 보자. 관찰값 <span class="math inline">\(Y_i\)</span>는 세 부분으로 나누어 생각할 수 있다.</li>
+</ul>
+<p><span class="math display">\[Y_i = \underbrace{\bar{Y}}_{\rm (i)} + (\underbrace{\hat{Y}_i - \bar{Y}}_{\rm (ii)}) + (\underbrace{Y_i - \hat{Y}_i}_{\rm (iii)})\]</span></p>
+<ul>
+<li>(i): <span class="math inline">\(Y\)</span> 변수의 대푯값 (설명변수가 하나도 없을 때 <span class="math inline">\(Y\)</span>에 대한 자연스러운 예측값)</li>
+<li>(ii): 회귀등식 기반의 <span class="math inline">\(Y\)</span> 예측값 (설명변수가 있을 때 <span class="math inline">\(Y\)</span>에 대한 자연스러운 예측값)과 (i)의 차이</li>
+<li>(iii): 잔차, 실제값과 (ii)의 차이</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figure/regression-line.png" style="height:30.0%" class="figure-img"></p>
+<figcaption>그림: 회귀선에 의하여 예측된 부분 및 잔차</figcaption>
+</figure>
+</div>
+<ul>
+<li>(i)를 좌변으로 옮기면 아래와 같이도 생각할 수 있다.</li>
+</ul>
+<p><span class="math display">\[\underbrace{Y_i  - \bar{Y}}_{\mbox{편차}} =  (\underbrace{\hat{Y}_i - \bar{Y}}_{\mbox{예측(설명)되는 부분}}) + (\underbrace{Y_i - \hat{Y}_i}_{\mbox{예측(설명)되지 않는 부분}})\]</span></p>
+<ul>
+<li>특별히 위 식들의 제곱합들은 아래처럼 분해가능한 성질이 있다.</li>
+</ul>
+<p><span class="math display">\[\underbrace{\sum_{i=1}^n (Y_i  - \bar{Y})^2 }_{\mbox{SST}} =  \underbrace{\sum_{i=1}^n ( \hat{Y}_i - \bar{Y} )^2 }_{\mbox{SSR}} + \underbrace{\sum_{i=1}^n (Y_i - \hat{Y}_i)^2}_{\mbox{SSE}}\]</span></p>
+<ul>
+<li><strong>결정계수(coefficient of determination)</strong>: 응답변수의 총 제곱합 중 회귀모형에 의해 설명된 제곱합의 비율. 모형의 적합 정도를 평가하는 지표 중 하나이다.</li>
+</ul>
+<p><span class="math display">\[R^2 := \frac{SSR}{SST} = 1 - \frac{SSE}{SST}\]</span></p>
+<ul>
+<li><p>만약 자료점이 선형에 가깝다면 추세선 근처에 점들이 분포해 있을 것이므로, <span class="math inline">\(SSE\)</span>가 거의 0에 가까울 것이다 (즉 <span class="math inline">\(R^2 \approx 1\)</span>). 한편, 자료점에 선형경향이 없고 백색잡음처럼 보인다면, <span class="math inline">\(SSE\)</span>가 <span class="math inline">\(SSR\)</span>에 비해 상대적으로 매우 클 것이고, 그렇다면 (즉 <span class="math inline">\(R^2 \approx 0\)</span>)을 예상할 수 있다.</p></li>
+<li><p><strong>Fact</strong>: <span class="math inline">\(R^2\)</span>은 <span class="math inline">\(X\)</span>와 <span class="math inline">\(Y\)</span> 간의 표본상관계수의 제곱과 동일함을 수학적으로 유도할 수 있다.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### 아래 값이 `summary` 결과의 `R-square`와 일치하는지 확인해 보라.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>r <span class="ot">=</span> <span class="fu">cor</span>(galton_data<span class="sc">$</span>father, galton_data<span class="sc">$</span>son)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(r<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5616042</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="회귀모형에서의-통계적-추론" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="회귀모형에서의-통계적-추론"><span class="header-section-number">6.5</span> 회귀모형에서의 통계적 추론</h2>
+<section id="회귀분석기반의-통계적-추론을-위한-가정" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="회귀분석기반의-통계적-추론을-위한-가정"><span class="header-section-number">6.5.1</span> 회귀분석(기반의 통계적 추론)을 위한 가정</h3>
+<ul>
+<li><p>최소제곱추정량 <span class="math inline">\(\hat{\alpha}\)</span>과 <span class="math inline">\(\hat{\beta}\)</span>을 이용하여 true <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>에 대한 통계적인 추론(e.g.&nbsp;신뢰구간, 가설검정)을 하기 위하여는, (1), (2)식의 선형추세 가정에 더하여, 오차항에 관련된 더 강화된 가정이 필요하다.</p></li>
+<li><p>강화된 모형 가정:</p></li>
+</ul>
+<p><span class="math display">\[Y_i = \alpha + \beta X_i + \epsilon_i, \tag{3}\]</span> where (추가 가정들)</p>
+<ol type="1">
+<li><span class="math inline">\(\mathbf{X}_1, \ldots, \mathbf{X}_n\)</span>’s are iid, or deterministic.</li>
+<li>(signal과 noise 간의 독립) <span class="math inline">\(\epsilon_i \perp \mathbf{X}_i\)</span> for each <span class="math inline">\(i=1,\ldots,n\)</span>.</li>
+<li><span class="math inline">\(E(\epsilon_i)=0\)</span>.</li>
+<li><strong>(오차항 간의 독립성)</strong> <span class="math inline">\(\epsilon_1, \ldots, \epsilon_n\)</span> are iid.</li>
+<li><strong>(오차항의 등분산성)</strong> <span class="math inline">\(\mathbb{V}(\epsilon_i)=\sigma^2\)</span> for all <span class="math inline">\(i\)</span>.</li>
+<li><strong>(오차항의 정규성)</strong> <span class="math inline">\(\epsilon_i\)</span> follows normal distribution for all <span class="math inline">\(i\)</span>.</li>
+</ol>
+<p>조건 3-6은 요약하여 아래와 같이 표기하기도 한다:</p>
+<p><span class="math display">\[\epsilon_i \stackrel{\rm iid}{\sim} N(0, \sigma^2), ~~i=1, \ldots, n. \tag{4}\]</span></p>
+</section>
+<section id="회귀모형에서의-통계적-추론-관련-주요-결과" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="회귀모형에서의-통계적-추론-관련-주요-결과"><span class="header-section-number">6.5.2</span> 회귀모형에서의 통계적 추론 관련 주요 결과</h3>
+<p>통계적 추론의 관심사는 다음과 같다.</p>
+<ul>
+<li>모형 계수 <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> 관련
+<ul>
+<li><span class="math inline">\(\hat{\alpha}\)</span>, <span class="math inline">\(\hat{\beta}\)</span>의 분산</li>
+<li><span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>의 신뢰구간</li>
+<li>귀무가설 <span class="math inline">\(H_0: \alpha = 0\)</span> 및 검정 결과, <span class="math inline">\(H_0: \beta = 0\)</span>의 신뢰구간</li>
+</ul></li>
+<li><span class="math inline">\(X=x_0\)</span>가 주어졌을 때의 예측값 <span class="math inline">\(f(x_0) := E(Y|X=x_0) = \alpha + \beta x_0\)</span> 관련
+<ul>
+<li>적합된 예측값 <span class="math inline">\(\hat{f}(x_0) := \hat{E}(Y|X=x_0) := \hat{\alpha} + \hat{\beta} x_0\)</span>의 분산</li>
+<li>예측값 <span class="math inline">\(E(Y|X=x_0) = \alpha + \beta x_0\)</span>의 신뢰구간</li>
+</ul></li>
+</ul>
+<p>아래 결과들을 이용해 위의 통계적 추론을 수행한다. 자세한 수식은 다중회귀분석에서 소개코자 한다. notation의 편의상 <span class="math inline">\((\alpha, \beta) =: \boldsymbol{\theta}\)</span>라 하자.</p>
+<ul>
+<li><p>(비편향성) 가정 (i)-(iii)가 성립하면 <span class="math inline">\(E(\hat{\boldsymbol{\theta}}) = \boldsymbol{\theta}\)</span>이다.</p></li>
+<li><p>(일치성) 가정 (i)-(iv)가 성립하면 <span class="math inline">\(n\rightarrow\infty\)</span>일 때 <span class="math inline">\(\hat{\boldsymbol{\theta}}\)</span>가 true <span class="math inline">\(\boldsymbol{\theta}\)</span>로 수렴한다.</p></li>
+<li><p>(근사 정규성) 가정 (i)-(v)가 성립하면 <span class="math inline">\(n\rightarrow\infty\)</span>일 때 <span class="math inline">\(\hat{\boldsymbol{\theta}}\)</span>가 근사적으로 다변량 정규분포 <span class="math inline">\(N( \boldsymbol{\theta}, \sigma^2 (\mathbb{X}^T\mathbb{X})^{-1})\)</span>을 따른다. 여기서 <span class="math inline">\(\mathbb{X}\)</span>는 다음과 같이 정의된 <span class="math inline">\(n\)</span> by <span class="math inline">\(2\)</span> 행렬이다:</p></li>
+</ul>
+<p><span class="math display">\[\mathbb{X} = \begin{bmatrix}
+1 &amp; X_1 \\
+1 &amp; X_2 \\
+1 &amp; X_3 \\
+\vdots &amp; \vdots \\
+1 &amp; X_n
+\end{bmatrix}.\]</span></p>
+<ul>
+<li><p>(정규성) 가정 (i)-(vi)가 성립하면 <span class="math inline">\(n\)</span>에 상관없이 <span class="math inline">\(\hat{\boldsymbol{\theta}}\)</span>가 다변량 정규분포 <span class="math inline">\(N( \boldsymbol{\theta}, \sigma^2 (\mathbb{X}^T\mathbb{X})^{-1})\)</span>을 따른다.</p></li>
+<li><p>오차의 분산 <span class="math inline">\(\sigma^2\)</span>의 추정: 아래처럼 평균 잔차(mean-squared error)를 정의하자.</p></li>
+</ul>
+<p><span class="math display">\[MSE := \frac{SSE}{n - 2} = \frac{\sum_{i=1}^n (Y_i - \hat{Y}_i)^2}{n - 2} = \frac{\sum_{i=1}^n (Y_i - (\hat{\alpha} + \hat{\beta} X_i)^2}{n - 2}\]</span></p>
+<p><span class="math inline">\(MSE\)</span>는 (i)-(v) 가정 하에서 <span class="math inline">\(MSE \rightarrow \sigma^2\)</span> as <span class="math inline">\(n \to \infty\)</span>이며, (i)-(iv) 가정 하에서 <span class="math inline">\(E(MSE) = \sigma^2\)</span>이다.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./R-5-vis.html" class="pagination-link" aria-label="R - 시각화 기본">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R - 시각화 기본</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

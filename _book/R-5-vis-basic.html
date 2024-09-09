@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석 - 5&nbsp; R - 시각화 기본</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./simple-linear-regression.html" rel="next">
+<link href="./R-4-list-dfs-io.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./R-5-vis-basic.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R - 시각화 기본</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">CMC5105 - 수학교육통계분석: 회귀모형과 경시적 자료분석</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">강의계획서</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-1-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R - 기초 연산</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-2-vec-mat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R - 행렬과 벡터</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-3-statements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R - 조건문, 반복문, 함수를 이용한 프로그래밍</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-4-list-dfs-io.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R - 데이터(테이블) 다루기</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-5-vis-basic.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R - 시각화 기본</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./simple-linear-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#시각화의-중요성-및-시각화의-주요-요소" id="toc-시각화의-중요성-및-시각화의-주요-요소" class="nav-link active" data-scroll-target="#시각화의-중요성-및-시각화의-주요-요소"><span class="header-section-number">5.1</span> 시각화의 중요성 및 시각화의 주요 요소</a></li>
+  <li><a href="#예제용-데이터" id="toc-예제용-데이터" class="nav-link" data-scroll-target="#예제용-데이터"><span class="header-section-number">5.2</span> 예제용 데이터</a></li>
+  <li><a href="#기본적-시각화" id="toc-기본적-시각화" class="nav-link" data-scroll-target="#기본적-시각화"><span class="header-section-number">5.3</span> 기본적 시각화</a>
+  <ul class="collapse">
+  <li><a href="#히스토그램-histogram" id="toc-히스토그램-histogram" class="nav-link" data-scroll-target="#히스토그램-histogram"><span class="header-section-number">5.3.1</span> 히스토그램 (histogram)</a></li>
+  <li><a href="#상자-그림-box-plot" id="toc-상자-그림-box-plot" class="nav-link" data-scroll-target="#상자-그림-box-plot"><span class="header-section-number">5.3.2</span> 상자 그림 (box plot)</a></li>
+  <li><a href="#막대-차트-bar-chart" id="toc-막대-차트-bar-chart" class="nav-link" data-scroll-target="#막대-차트-bar-chart"><span class="header-section-number">5.3.3</span> 막대 차트 (bar chart)</a></li>
+  <li><a href="#산점도-scatter-plot" id="toc-산점도-scatter-plot" class="nav-link" data-scroll-target="#산점도-scatter-plot"><span class="header-section-number">5.3.4</span> 산점도 (scatter plot)</a></li>
+  <li><a href="#선-그래프-line-graph" id="toc-선-그래프-line-graph" class="nav-link" data-scroll-target="#선-그래프-line-graph"><span class="header-section-number">5.3.5</span> 선 그래프 (line graph)</a></li>
+  </ul></li>
+  <li><a href="#r-기본-그래픽-함수들의-구성요소" id="toc-r-기본-그래픽-함수들의-구성요소" class="nav-link" data-scroll-target="#r-기본-그래픽-함수들의-구성요소"><span class="header-section-number">5.4</span> R 기본 그래픽 함수들의 구성요소</a></li>
+  <li><a href="#다차원-시각화" id="toc-다차원-시각화" class="nav-link" data-scroll-target="#다차원-시각화"><span class="header-section-number">5.5</span> 다차원 시각화</a>
+  <ul class="collapse">
+  <li><a href="#속성-변수를-추가하는-전략" id="toc-속성-변수를-추가하는-전략" class="nav-link" data-scroll-target="#속성-변수를-추가하는-전략"><span class="header-section-number">5.5.1</span> 속성 변수를 추가하는 전략</a></li>
+  <li><a href="#차트를-조절하는-전략" id="toc-차트를-조절하는-전략" class="nav-link" data-scroll-target="#차트를-조절하는-전략"><span class="header-section-number">5.5.2</span> 차트를 조절하는 전략</a></li>
+  </ul></li>
+  <li><a href="#기타-시각화" id="toc-기타-시각화" class="nav-link" data-scroll-target="#기타-시각화"><span class="header-section-number">5.6</span> 기타 시각화</a>
+  <ul class="collapse">
+  <li><a href="#히트맵-heatmap" id="toc-히트맵-heatmap" class="nav-link" data-scroll-target="#히트맵-heatmap"><span class="header-section-number">5.6.1</span> 히트맵 (heatmap)</a></li>
+  <li><a href="#산점도의-점을-텍스트로-표시하기" id="toc-산점도의-점을-텍스트로-표시하기" class="nav-link" data-scroll-target="#산점도의-점을-텍스트로-표시하기"><span class="header-section-number">5.6.2</span> 산점도의 점을 텍스트로 표시하기</a></li>
+  <li><a href="#흐트러뜨리기-jittering" id="toc-흐트러뜨리기-jittering" class="nav-link" data-scroll-target="#흐트러뜨리기-jittering"><span class="header-section-number">5.6.3</span> 흐트러뜨리기 (jittering)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R - 시각화 기본</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Acknowledgement: 본 절의 구성에는 다음 교재를 발췌하였다.</p>
+<ul>
+<li>Galit Shmueli 외 4인 지음, 조재희 외 4인 역 (2018). 비즈니스 애널리틱스를 위한 데이터마이닝 (R Edition). 이앤비플러스.</li>
+<li>Baumer et al.&nbsp;(2024) Modern Data Science with R (3rd Edition). CRC Press. <a href="https://mdsr-book.github.io/mdsr3e/">https://mdsr-book.github.io/mdsr3e/</a></li>
+</ul>
+<section id="시각화의-중요성-및-시각화의-주요-요소" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="시각화의-중요성-및-시각화의-주요-요소"><span class="header-section-number">5.1</span> 시각화의 중요성 및 시각화의 주요 요소</h2>
+<ul>
+<li><a href="https://mdsr-book.github.io/mdsr3e/02-datavizI.html">Modern Data Science with R의 2장</a>에 자세히 설명되어 있으니 일독을 권한다.</li>
+<li>좋은 시각화는 경험도 많이 필요하므로, 좋은걸 많이 봐두는 것이 좋다 (미술관 구경하듯).</li>
+</ul>
+</section>
+<section id="예제용-데이터" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="예제용-데이터"><span class="header-section-number">5.2</span> 예제용 데이터</h2>
+<ul>
+<li>보스턴 주택 데이터 (Boston housing data)
+<ul>
+<li>Housing data for 506 census tracts of Boston from the 1970 census.</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("mlbench")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"BostonHousing"</span>, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(BostonHousing, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     crim   zn indus chas   nox    rm  age    dis rad tax ptratio      b lstat
+1 0.00632 18.0  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90  4.98
+2 0.02731  0.0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90  9.14
+3 0.02729  0.0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83  4.03
+4 0.03237  0.0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63  2.94
+5 0.06905  0.0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90  5.33
+6 0.02985  0.0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12  5.21
+7 0.08829 12.5  7.87    0 0.524 6.012 66.6 5.5605   5 311    15.2 395.60 12.43
+  medv
+1 24.0
+2 21.6
+3 34.7
+4 33.4
+5 36.2
+6 28.7
+7 22.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(BostonHousing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   506 obs. of  14 variables:
+ $ crim   : num  0.00632 0.02731 0.02729 0.03237 0.06905 ...
+ $ zn     : num  18 0 0 0 0 0 12.5 12.5 12.5 12.5 ...
+ $ indus  : num  2.31 7.07 7.07 2.18 2.18 2.18 7.87 7.87 7.87 7.87 ...
+ $ chas   : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 1 1 1 1 ...
+ $ nox    : num  0.538 0.469 0.469 0.458 0.458 0.458 0.524 0.524 0.524 0.524 ...
+ $ rm     : num  6.58 6.42 7.18 7 7.15 ...
+ $ age    : num  65.2 78.9 61.1 45.8 54.2 58.7 66.6 96.1 100 85.9 ...
+ $ dis    : num  4.09 4.97 4.97 6.06 6.06 ...
+ $ rad    : num  1 2 2 3 3 3 5 5 5 5 ...
+ $ tax    : num  296 242 242 222 222 222 311 311 311 311 ...
+ $ ptratio: num  15.3 17.8 17.8 18.7 18.7 18.7 15.2 15.2 15.2 15.2 ...
+ $ b      : num  397 397 393 395 397 ...
+ $ lstat  : num  4.98 9.14 4.03 2.94 5.33 ...
+ $ medv   : num  24 21.6 34.7 33.4 36.2 28.7 22.9 27.1 16.5 18.9 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(BostonHousing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      crim                zn             indus       chas         nox        
+ Min.   : 0.00632   Min.   :  0.00   Min.   : 0.46   0:471   Min.   :0.3850  
+ 1st Qu.: 0.08205   1st Qu.:  0.00   1st Qu.: 5.19   1: 35   1st Qu.:0.4490  
+ Median : 0.25651   Median :  0.00   Median : 9.69           Median :0.5380  
+ Mean   : 3.61352   Mean   : 11.36   Mean   :11.14           Mean   :0.5547  
+ 3rd Qu.: 3.67708   3rd Qu.: 12.50   3rd Qu.:18.10           3rd Qu.:0.6240  
+ Max.   :88.97620   Max.   :100.00   Max.   :27.74           Max.   :0.8710  
+       rm             age              dis              rad        
+ Min.   :3.561   Min.   :  2.90   Min.   : 1.130   Min.   : 1.000  
+ 1st Qu.:5.886   1st Qu.: 45.02   1st Qu.: 2.100   1st Qu.: 4.000  
+ Median :6.208   Median : 77.50   Median : 3.207   Median : 5.000  
+ Mean   :6.285   Mean   : 68.57   Mean   : 3.795   Mean   : 9.549  
+ 3rd Qu.:6.623   3rd Qu.: 94.08   3rd Qu.: 5.188   3rd Qu.:24.000  
+ Max.   :8.780   Max.   :100.00   Max.   :12.127   Max.   :24.000  
+      tax           ptratio            b              lstat      
+ Min.   :187.0   Min.   :12.60   Min.   :  0.32   Min.   : 1.73  
+ 1st Qu.:279.0   1st Qu.:17.40   1st Qu.:375.38   1st Qu.: 6.95  
+ Median :330.0   Median :19.05   Median :391.44   Median :11.36  
+ Mean   :408.2   Mean   :18.46   Mean   :356.67   Mean   :12.65  
+ 3rd Qu.:666.0   3rd Qu.:20.20   3rd Qu.:396.23   3rd Qu.:16.95  
+ Max.   :711.0   Max.   :22.00   Max.   :396.90   Max.   :37.97  
+      medv      
+ Min.   : 5.00  
+ 1st Qu.:17.02  
+ Median :21.20  
+ Mean   :22.53  
+ 3rd Qu.:25.00  
+ Max.   :50.00  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(BostonHousing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 506  14</code></pre>
+</div>
+</div>
+<ul>
+<li>암트랙 승차자 수 데이터 (AmTrak ridership data)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>amtrak <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/mandyhpnguyen/MS-Data-Analytics-Datasets/main/Time%20Series/Amtrak%20data.csv"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(amtrak, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Month Ridership Amtrak.Ridership.Number.of.Passengers...in.thousands.  X X.1
+1 Jan-91      1709                                                    NA NA  NA
+2 Feb-91      1621                                                    NA NA  NA
+3 Mar-91      1973                                                    NA NA  NA
+4 Apr-91      1812                                                    NA NA  NA
+5 May-91      1975                                                    NA NA  NA
+6 Jun-91      1862                                                    NA NA  NA
+7 Jul-91      1940                                                    NA NA  NA
+  X.2
+1  NA
+2  NA
+3  NA
+4  NA
+5  NA
+6  NA
+7  NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(amtrak)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   159 obs. of  6 variables:
+ $ Month                                                : chr  "Jan-91" "Feb-91" "Mar-91" "Apr-91" ...
+ $ Ridership                                            : int  1709 1621 1973 1812 1975 1862 1940 2013 1596 1725 ...
+ $ Amtrak.Ridership.Number.of.Passengers...in.thousands.: logi  NA NA NA NA NA NA ...
+ $ X                                                    : logi  NA NA NA NA NA NA ...
+ $ X.1                                                  : logi  NA NA NA NA NA NA ...
+ $ X.2                                                  : logi  NA NA NA NA NA NA ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(amtrak)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Month             Ridership   
+ Length:159         Min.   :1361  
+ Class :character   1st Qu.:1698  
+ Mode  :character   Median :1831  
+                    Mean   :1822  
+                    3rd Qu.:1967  
+                    Max.   :2223  
+ Amtrak.Ridership.Number.of.Passengers...in.thousands.    X          
+ Mode:logical                                          Mode:logical  
+ NA's:159                                              NA's:159      
+                                                                     
+                                                                     
+                                                                     
+                                                                     
+   X.1            X.2         
+ Mode:logical   Mode:logical  
+ NA's:159       NA's:159      
+                              
+                              
+                              
+                              </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(amtrak)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 159   6</code></pre>
+</div>
+</div>
+</section>
+<section id="기본적-시각화" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="기본적-시각화"><span class="header-section-number">5.3</span> 기본적 시각화</h2>
+<ul>
+<li>히스토그램 (Histogram)</li>
+<li>상자그림 (Boxplots)</li>
+<li>막대 차트 (Bar charts)</li>
+<li>산점도 (Scatter plots)</li>
+<li>선 그래프 (Line graphs)</li>
+</ul>
+<section id="히스토그램-histogram" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="히스토그램-histogram"><span class="header-section-number">5.3.1</span> 히스토그램 (histogram)</h3>
+<ul>
+<li>주택가격의 중앙값(medv)의 히스토그램을 살펴보자.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(BostonHousing<span class="sc">$</span>medv, <span class="at">xlab =</span> <span class="st">"medv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="상자-그림-box-plot" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="상자-그림-box-plot"><span class="header-section-number">5.3.2</span> 상자 그림 (box plot)</h3>
+<ul>
+<li>상자그림의 기본 문법은 다음과 같다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(BostonHousing<span class="sc">$</span>medv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>상자 그림은 다음과 같이 그린다.
+<ul>
+<li>위쪽 이상점은 Q3 + 1.5*(Q3-Q1)위에 있는 점으로 정의된다. 아래쪽 이상점도 비슷하게 정의된다.</li>
+<li>박스: Q1부터 Q3까지의 범위 (가운데 선은 Q2 중간값)</li>
+<li>박스의 위쪽/아래쪽 bar는 maximum/minimum of non-outliers</li>
+</ul></li>
+<li>상자그림은 여러 하위군을 비교하기에도 좋다. 다음은 주택가격 중앙값을 찰스강변(1) or 찰스강변 아님(0)으로 구분하여 상자그림을 그렸다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(BostonHousing<span class="sc">$</span>medv <span class="sc">~</span> BostonHousing<span class="sc">$</span>chas, <span class="at">xlab =</span> <span class="st">"chas"</span>, <span class="at">ylab =</span> <span class="st">"medv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="막대-차트-bar-chart" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="막대-차트-bar-chart"><span class="header-section-number">5.3.3</span> 막대 차트 (bar chart)</h3>
+<ul>
+<li><p>평균 주택가격을 찰스강변 지역(<code>chas=1</code>), 찰스강변 이외지역(<code>chas=0</code>)으로 구분하여 막대그래프로 그리고자 한다.</p></li>
+<li><p>먼저 각 지역들에 대한 요약값을 계산한다.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data.for.plot <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(BostonHousing<span class="sc">$</span>medv, <span class="at">by =</span> <span class="fu">list</span>(BostonHousing<span class="sc">$</span>chas), <span class="at">FUN =</span> mean)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data.for.plot) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CHAS"</span>, <span class="st">"MeanMEDV"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data.for.plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  CHAS MeanMEDV
+1    0 22.09384
+2    1 28.44000</code></pre>
+</div>
+</div>
+<ul>
+<li>위와 같이 한 컬럼이 범주, 한 컬럼이 값을 뜻하는 테이블이 있으면 막대그래프를 그릴 수 있다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="at">height=</span>data.for.plot<span class="sc">$</span>MeanMEDV, <span class="at">names.arg =</span> data.for.plot<span class="sc">$</span>CHAS,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"CHAS"</span>, <span class="at">ylab =</span> <span class="st">"Avg. MEDV"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="산점도-scatter-plot" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="산점도-scatter-plot"><span class="header-section-number">5.3.4</span> 산점도 (scatter plot)</h3>
+<ul>
+<li>산점도는 두 수치형 변수의 관계를 시각화하는 데 쓰인다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>BostonHousing<span class="sc">$</span>medv, <span class="at">y=</span>BostonHousing<span class="sc">$</span>lstat,  <span class="at">xlab =</span> <span class="st">"MDEV"</span>, <span class="at">ylab =</span> <span class="st">"LSTAT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="선-그래프-line-graph" class="level3" data-number="5.3.5">
+<h3 data-number="5.3.5" class="anchored" data-anchor-id="선-그래프-line-graph"><span class="header-section-number">5.3.5</span> 선 그래프 (line graph)</h3>
+<ul>
+<li>R의 <code>plot</code>함수의 <code>type</code>옵션을 조정하면 주어진 점들의 sequence를 선으로 이어줄 수 있다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(amtrak), <span class="at">y=</span>amtrak<span class="sc">$</span>Ridership,  <span class="at">type=</span><span class="st">"l"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>x축에 <code>amtrak$Month</code>을 지정하여 연도-월을 뜻하게 하려면, R에서 Date 변수를 다루는 방법을 익혀야 한다. (생략)</li>
+</ul>
+</section>
+</section>
+<section id="r-기본-그래픽-함수들의-구성요소" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="r-기본-그래픽-함수들의-구성요소"><span class="header-section-number">5.4</span> R 기본 그래픽 함수들의 구성요소</h2>
+<ul>
+<li><p>R의 기본 시각화 기능은 특정 그림에 레이어를 하나씩 얹는 방식이다.</p></li>
+<li><p>기본적인 구성요소 함수들의 개략적 설명이다.</p>
+<ul>
+<li><code>plot(x, y)</code>: (x[i], y[i])들의 산점도를 새로 그린다.</li>
+<li><code>points(x, y)</code>: 점 (x[i], y[i])들의 산점도를 추가한다.</li>
+<li><code>lines(x, y)</code>: 점 (x[i], y[i])들의 선그래프를 추가한다.</li>
+<li><code>abline()</code>: 특정 직선이나 수직선/수평선을 추가한다.</li>
+<li><code>curve()</code>: (사용자가 정의한) 특정 y=f(x)의 그래프를 추가한다.</li>
+<li><code>axis()</code>: 축 이름 등의 축 관련 속성을 추가/수정한다.</li>
+<li><code>legend()</code>: 범례를 추가/수정한다.</li>
+</ul></li>
+<li><p>아래 fake polynomial regresion 예제를 통햬 이해해 보자.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## function setting</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>f <span class="ot">=</span> <span class="cf">function</span>(t) <span class="fu">return</span>( (<span class="dv">1</span><span class="sc">/</span><span class="dv">10</span>)<span class="sc">*</span>t<span class="sc">*</span>(t<span class="dv">-8</span>)<span class="sc">*</span>(t<span class="sc">+</span><span class="dv">8</span>) ) ;</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="do">## data settings</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">runif</span>(<span class="dv">50</span>) ;         <span class="co"># uniform(0,1)에서 random sample 50개 추출</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>obs.x <span class="ot">=</span> (x <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">20</span> ;    <span class="co"># unif(0,1) -&gt; unif(-10, 10)으로 변환</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>error <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">50</span>)<span class="sc">*</span><span class="dv">3</span> ;   <span class="co"># normal(0,1)에서 random sample 50개 추출하고 3씩 곱함</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>obs.y <span class="ot">=</span> <span class="fu">f</span>(obs.x) <span class="sc">+</span> error ;</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="do">## draw an empty plot</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>), <span class="fu">c</span>(<span class="fu">f</span>(<span class="sc">-</span><span class="dv">10</span>), <span class="fu">f</span>(<span class="dv">10</span>)), <span class="at">type=</span><span class="st">"n"</span>, <span class="at">xlab=</span><span class="st">"x"</span>, <span class="at">ylab=</span><span class="st">"f(x)"</span>, <span class="at">main=</span><span class="st">"Sample plot"</span>, <span class="at">axes=</span>F)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="do">## add x-axis</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="sc">-</span><span class="dv">5</span>, <span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>))</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="do">## add y-axis</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">30</span>, <span class="sc">-</span><span class="dv">15</span>, <span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">30</span>))</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="do">## add curve</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">f</span>(x), <span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"red"</span>, <span class="at">add=</span>T)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="do">## add points</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(obs.x, obs.y, <span class="at">pch=</span><span class="dv">5</span>, <span class="at">col=</span><span class="st">"blue"</span>) </span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="do">## add a vertical line</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">5</span>, <span class="at">col=</span><span class="st">"green"</span>, <span class="at">lty=</span><span class="st">"dashed"</span>) </span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="fu">c</span>(<span class="st">"True"</span>,<span class="st">"Observed"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>), <span class="at">pch=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">5</span>), <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="다차원-시각화" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="다차원-시각화"><span class="header-section-number">5.5</span> 다차원 시각화</h2>
+<ul>
+<li><p>기본 용도: 스토리텔링 / 복잡한 정보를 효과적으로 표현하고 싶을 때</p></li>
+<li><p>전략 1. 속성 변수 추가</p>
+<ul>
+<li>다른 범주형 변수를 색상, 크기, 모양, 다중 패널, 애니메이션으로 활용</li>
+<li>응용처: 추가적인 전처리를 고려할 때, 또는 model에서 interaction term을 추가할지 결정할 때 (단순 prediction이 아닌 모델/계수의 해석이 중요한 상황에서)</li>
+</ul></li>
+<li><p>전략 2. 차트 조절</p>
+<ul>
+<li>변수변환</li>
+<li>연속변수의 스케일 변경 (rescaling)</li>
+<li>연속변수 그룹화 (aggregation)</li>
+<li>범주변수의 범주 재조정</li>
+</ul></li>
+</ul>
+<section id="속성-변수를-추가하는-전략" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="속성-변수를-추가하는-전략"><span class="header-section-number">5.5.1</span> 속성 변수를 추가하는 전략</h3>
+<ul>
+<li><p>보스턴 가구 데이터에서 NOX vs.&nbsp;LSTAT의 관계를 살필 때, 소득이 높은 개체 (medv &gt; 30)와 소득이 낮은 개체에 따라 색상을 다르게 주었다.</p></li>
+<li><p>ggplot은 Hadley Wickham이 만든 고품질의 시각화를 만들 수 있는 라이브러리이다. ggplot의 문법에 익숙해지면 더 고품질의 시각화를 간단하게 만들 수 있다. ggplot에 대한 다양한 튜토리얼이 있으나, 자세한 소개는 <a href="https://mdsr-book.github.io/mdsr3e/03-datavizII.html">Modern Data Science with R의 3장</a>을 구글 번역하여 보는 방법도 있다.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y=</span>BostonHousing<span class="sc">$</span>nox, <span class="at">x=</span>BostonHousing<span class="sc">$</span>lstat, <span class="at">ylab =</span> <span class="st">"NOX"</span>, <span class="at">xlab =</span> <span class="st">"LSTAT"</span>,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(BostonHousing<span class="sc">$</span>medv <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="st">"black"</span>, <span class="st">"gray"</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># add legend outside of plotting area</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># In legend() use argument inset =  to control the location of the legend relative</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># to the plot.</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">inset=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="fl">0.2</span>),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"MEDV &gt; 30"</span>, <span class="st">"MEDV &lt;= 30"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"gray"</span>),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># alternative plot with ggplot</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(BostonHousing, <span class="fu">aes</span>(<span class="at">y =</span> nox, <span class="at">x =</span> lstat, <span class="at">color=</span>(medv <span class="sc">&gt;</span> <span class="dv">30</span>))) <span class="sc">+</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>찰스강 인접 여부에 따라 rad vs.&nbsp;주택 가격의 막대그래프를 따로 그렸다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute mean MEDV per RAD and CHAS</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># In aggregate() use argument drop = FALSE to include all combinations</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (exiting and missing) of RAD X CHAS.</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>data.for.plot <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(BostonHousing<span class="sc">$</span>medv, <span class="at">by =</span> <span class="fu">list</span>(BostonHousing<span class="sc">$</span>rad, BostonHousing<span class="sc">$</span>chas),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">FUN =</span> mean, <span class="at">drop =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data.for.plot) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"RAD"</span>, <span class="st">"CHAS"</span>, <span class="st">"meanMEDV"</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the data</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="at">height =</span> data.for.plot<span class="sc">$</span>meanMEDV[data.for.plot<span class="sc">$</span>CHAS <span class="sc">==</span> <span class="dv">0</span>],</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> data.for.plot<span class="sc">$</span>RAD[data.for.plot<span class="sc">$</span>CHAS <span class="sc">==</span> <span class="dv">0</span>],</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"RAD"</span>, <span class="at">ylab =</span> <span class="st">"Avg. MEDV"</span>, <span class="at">main =</span> <span class="st">"CHAS = 0"</span>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="at">height =</span> data.for.plot<span class="sc">$</span>meanMEDV[data.for.plot<span class="sc">$</span>CHAS <span class="sc">==</span> <span class="dv">1</span>],</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> data.for.plot<span class="sc">$</span>RAD[data.for.plot<span class="sc">$</span>CHAS <span class="sc">==</span> <span class="dv">1</span>],</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"RAD"</span>, <span class="at">ylab =</span> <span class="st">"Avg. MEDV"</span>, <span class="at">main =</span> <span class="st">"CHAS = 1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alternative plot with ggplot</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data.for.plot) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(RAD), <span class="at">y =</span> meanMEDV), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"RAD"</span>) <span class="sc">+</span> <span class="fu">facet_grid</span>(CHAS <span class="sc">~</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 3 rows containing missing values or values outside the scale range
+(`geom_bar()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>속성(변수)들이 모두 연속형이라면, 모든 조합의 산점도를 한꺼번에 그리는 방법도 있다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">## simple plot</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># use plot() to generate a matrix of 4X4 panels with variable name on the diagonal,</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and scatter plots in the remaining panels.</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(BostonHousing[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">13</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alternative, nicer plot (displayed)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("GGally")</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(BostonHousing[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">13</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="차트를-조절하는-전략" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="차트를-조절하는-전략"><span class="header-section-number">5.5.2</span> 차트를 조절하는 전략</h3>
+<ul>
+<li>한 축의 스케일을 로그 등으로 변환하는 전략</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## scatter plot: regular and log scale</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(BostonHousing<span class="sc">$</span>medv <span class="sc">~</span> BostonHousing<span class="sc">$</span>crim, <span class="at">xlab =</span> <span class="st">"CRIM"</span>, <span class="at">ylab =</span> <span class="st">"MEDV"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to use logarithmic scale set argument log = to either 'x', 'y', or 'xy'.</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(BostonHousing<span class="sc">$</span>medv <span class="sc">~</span> BostonHousing<span class="sc">$</span>crim,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="at">xlab =</span> <span class="st">"log(CRIM)"</span>, <span class="at">ylab =</span> <span class="st">"log(MEDV)"</span>, <span class="at">log =</span> <span class="st">'xy'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>시계열의 경우 추세선을 추가하거나,</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("forecast")</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Amtrak.df &lt;- read.csv("Amtrak data.csv")</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>ridership.ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(amtrak<span class="sc">$</span>Ridership, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1991</span>, <span class="dv">1</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2004</span>, <span class="dv">3</span>), <span class="at">freq =</span> <span class="dv">12</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="do">## fit curve</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>ridership.lm <span class="ot">&lt;-</span> <span class="fu">tslm</span>(ridership.ts <span class="sc">~</span> trend <span class="sc">+</span> <span class="fu">I</span>(trend<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ridership.ts, <span class="at">xlab =</span> <span class="st">"Year"</span>, <span class="at">ylab =</span> <span class="st">"Ridership (in 000s)"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1300</span>, <span class="dv">2300</span>))</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(ridership.lm<span class="sc">$</span>fitted, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>집계 수준을 변경하면 트렌드 파악에 도움이 된다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## zoom in, monthly, and annual plots</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>ridership<span class="fl">.2</span>yrs <span class="ot">&lt;-</span> <span class="fu">window</span>(ridership.ts, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1991</span>,<span class="dv">1</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1992</span>,<span class="dv">12</span>))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ridership<span class="fl">.2</span>yrs, <span class="at">xlab =</span> <span class="st">"Year"</span>, <span class="at">ylab =</span> <span class="st">"Ridership (in 000s)"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1300</span>, <span class="dv">2300</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>monthly.ridership.ts <span class="ot">&lt;-</span> <span class="fu">tapply</span>(ridership.ts, <span class="fu">cycle</span>(ridership.ts), mean)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(monthly.ridership.ts, <span class="at">xlab =</span> <span class="st">"Month"</span>, <span class="at">ylab =</span> <span class="st">"Average Ridership"</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1300</span>, <span class="dv">2300</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xaxt =</span> <span class="st">'n'</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="do">## set x labels</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Jan"</span>,<span class="st">"Feb"</span>,<span class="st">"Mar"</span>, <span class="st">"Apr"</span>,<span class="st">"May"</span>,<span class="st">"Jun"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"Jul"</span>,<span class="st">"Aug"</span>,<span class="st">"Sep"</span>,  <span class="st">"Oct"</span>,<span class="st">"Nov"</span>,<span class="st">"Dec"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>annual.ridership.ts <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(ridership.ts, <span class="at">FUN =</span> mean)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(annual.ridership.ts, <span class="at">xlab =</span> <span class="st">"Year"</span>, <span class="at">ylab =</span> <span class="st">"Average Ridership"</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">1300</span>, <span class="dv">2300</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="기타-시각화" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="기타-시각화"><span class="header-section-number">5.6</span> 기타 시각화</h2>
+<section id="히트맵-heatmap" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="히트맵-heatmap"><span class="header-section-number">5.6.1</span> 히트맵 (heatmap)</h3>
+<ul>
+<li>행렬형 자료의 현황 파악에 유용하다. 예를 들어 여러 변수들의 상관관계 행렬을 다음과 같이 나타낼 수 있다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## simple heatmap of correlations (without values)</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(<span class="fu">cor</span>(BostonHousing[,<span class="sc">-</span><span class="dv">4</span>]), <span class="at">Rowv =</span> <span class="cn">NA</span>, <span class="at">Colv =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## heatmap with values</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("gplots")</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gplots)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap.2</span>(<span class="fu">cor</span>(BostonHousing[,<span class="sc">-</span><span class="dv">4</span>]), <span class="at">Rowv =</span> <span class="cn">FALSE</span>, <span class="at">Colv =</span> <span class="cn">FALSE</span>, <span class="at">dendrogram =</span> <span class="st">"none"</span>,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">cellnote =</span> <span class="fu">round</span>(<span class="fu">cor</span>(BostonHousing[,<span class="sc">-</span><span class="dv">4</span>]),<span class="dv">2</span>),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">notecol =</span> <span class="st">"black"</span>, <span class="at">key =</span> <span class="cn">FALSE</span>, <span class="at">trace =</span> <span class="st">'none'</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="산점도의-점을-텍스트로-표시하기" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="산점도의-점을-텍스트로-표시하기"><span class="header-section-number">5.6.2</span> 산점도의 점을 텍스트로 표시하기</h3>
+<ul>
+<li>단순히 산포의 파악이 아니라 특정 자료점의 위치를 파악하는 데 유용하다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>utilities.df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/GauthamBest/Training_Data/master/utilities.csv"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(utilities.df<span class="sc">$</span>Fuel_Cost <span class="sc">~</span> utilities.df<span class="sc">$</span>Sales,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Sales"</span>, <span class="at">ylab =</span> <span class="st">"Fuel Cost"</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">20000</span>))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="at">x =</span> utilities.df<span class="sc">$</span>Sales, <span class="at">y =</span> utilities.df<span class="sc">$</span>Fuel_Cost,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> utilities.df<span class="sc">$</span>Company, <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">srt =</span> <span class="dv">20</span>, <span class="at">offset =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alternative with ggplot</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(utilities.df, <span class="fu">aes</span>(<span class="at">y =</span> Fuel_Cost, <span class="at">x =</span> Sales)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="st">" "</span>, Company)), <span class="at">size =</span> <span class="dv">4</span>, <span class="at">hjust =</span> <span class="fl">0.0</span>, <span class="at">angle =</span> <span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fl">0.25</span>, <span class="fl">2.25</span>) <span class="sc">+</span> <span class="fu">xlim</span>(<span class="dv">3000</span>, <span class="dv">18000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="흐트러뜨리기-jittering" class="level3" data-number="5.6.3">
+<h3 data-number="5.6.3" class="anchored" data-anchor-id="흐트러뜨리기-jittering"><span class="header-section-number">5.6.3</span> 흐트러뜨리기 (jittering)</h3>
+<ul>
+<li>여러 자료점이 동일한 값을 취하는 경우, 그 분포의 밀집도를 표현하기에 좋다.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>universal.df <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"https://www.dataminingbook.com/system/files/UniversalBank.csv"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># use function alpha() in library scales to add transparent colors</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("scales")</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">jitter</span>(universal.df<span class="sc">$</span>CCAvg, <span class="dv">1</span>) <span class="sc">~</span> <span class="fu">jitter</span>(universal.df<span class="sc">$</span>Income, <span class="dv">1</span>),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">col =</span> <span class="fu">alpha</span>(<span class="fu">ifelse</span>(universal.df<span class="sc">$</span>Securities.Account <span class="sc">==</span> <span class="dv">0</span>, <span class="st">'gray'</span>, <span class="st">'red'</span>), <span class="fl">0.4</span>),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">log =</span> <span class="st">'xy'</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">10</span>),</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">xlab =</span> <span class="st">"Income"</span>, <span class="at">ylab =</span> <span class="st">"CCAvg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in xy.coords(x, y, xlabel, ylabel, log): 48 y values &lt;= 0 omitted from
+logarithmic plot</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alternative with ggplot</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(universal.df) <span class="sc">+</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">y =</span> CCAvg, <span class="at">colour =</span> Securities.Account)) <span class="sc">+</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">100</span>, <span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">4.0</span>, <span class="fl">6.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in scale_y_log10(breaks = c(0.1, 0.2, 0.4, 0.6, 1, 2, 4, 6)): log-10
+transformation introduced infinite values.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="R-5-vis-basic_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./R-4-list-dfs-io.html" class="pagination-link" aria-label="R - 데이터(테이블) 다루기">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R - 데이터(테이블) 다루기</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./simple-linear-regression.html" class="pagination-link" aria-label="단순선형회귀모형 (simple linear regression model)">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

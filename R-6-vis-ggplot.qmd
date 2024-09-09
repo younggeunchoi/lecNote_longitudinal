@@ -1,0 +1,119 @@
+---
+output:
+  html_document:
+    fig_width: 6
+    fig_height: 4
+    fig_caption: false
+---
+
+# R - 시각화 기본
+
+Acknowledgement: 본 절의 구성에는 다음 교재를 발췌하였다.
+
+- Galit Shmueli 외 4인 지음, 조재희 외 4인 역 (2018). 비즈니스 애널리틱스를 위한 데이터마이닝 (R Edition). 이앤비플러스.
+- Baumer et al. (2024) Modern Data Science with R (3rd Edition). CRC Press. [https://mdsr-book.github.io/mdsr3e/](https://mdsr-book.github.io/mdsr3e/)
+
+
+## 시각화의 중요성 및 시각화의 주요 요소
+
+[Modern Data Science with R의 2장](https://mdsr-book.github.io/mdsr3e/02-datavizI.html)에 자세히 설명되어 있으니 일독을 권한다.
+
+## 예제용 데이터
+
+- 보스턴 주택 데이터 (Boston housing data)
+  - Housing data for 506 census tracts of Boston from the 1970 census.
+  
+```{r, message=FALSE }
+# install.packages("mlbench")
+data("BostonHousing", package = "mlbench")
+head(BostonHousing, 7)
+str(BostonHousing)
+summary(BostonHousing)
+dim(BostonHousing)
+```
+
+- 암트랙 승차자 수 데이터 (AmTrak ridership data)
+
+```{r, message=FALSE }
+amtrak <- read.csv("https://raw.githubusercontent.com/mandyhpnguyen/MS-Data-Analytics-Datasets/main/Time%20Series/Amtrak%20data.csv")
+head(amtrak, 7)
+str(amtrak)
+summary(amtrak)
+dim(amtrak)
+```
+
+
+## 기본적 시각화
+
+- 히스토그램 (Histogram)
+- 상자그림 (Boxplots)
+- 막대 차트 (Bar charts)
+- 산점도 (Scatter plots)
+- 선 그래프 (Line graphs)
+
+
+
+### 히스토그램 (histogram)
+
+- 주택가격의 중앙값(medv)의 히스토그램을 살펴보자.
+
+```{r}
+hist(BostonHousing$medv, xlab = "medv")
+```
+
+### 상자 그림 (box plot)
+
+- 상자그림의 기본 문법은 다음과 같다.
+
+```{r}
+boxplot(BostonHousing$medv)
+```
+
+- 상자 그림은 다음과 같이 그린다.
+  - 위쪽 이상점은 Q3 + 1.5*(Q3-Q1)위에 있는 점으로 정의된다. 아래쪽 이상점도 비슷하게 정의된다.
+  - 박스: Q1부터 Q3까지의 범위 (가운데 선은 Q2 중간값)
+  - 박스의 위쪽/아래쪽 bar는 maximum/minimum of non-outliers
+
+
+- 상자그림은 여러 하위군을 비교하기에도 좋다. 다음은  주택가격 중앙값을 찰스강변(1) or 찰스강변 아님(0)으로 구분하여 상자그림을 그렸다.
+
+```{r}
+boxplot(BostonHousing$medv ~ BostonHousing$chas, xlab = "chas", ylab = "medv")
+```
+
+### 막대 차트 (bar chart)
+
+- 평균 주택가격을 찰스강변 지역(`chas=1`), 찰스강변 이외지역(`chas=0`)으로 구분하여 막대그래프로 그리고자 한다.
+
+- 먼저 각 지역들에 대한 요약값을 계산한다.
+
+```{r}
+data.for.plot <- aggregate(BostonHousing$medv, by = list(BostonHousing$chas), FUN = mean)
+names(data.for.plot) <- c("CHAS", "MeanMEDV")
+print(data.for.plot)
+```
+
+- 위와 같이 한 컬럼이 범주, 한 컬럼이 값을 뜻하는 테이블이 있으면 막대그래프를 그릴 수 있다.
+
+```{r}
+barplot(height=data.for.plot$MeanMEDV, names.arg = data.for.plot$CHAS,
+     xlab = "CHAS", ylab = "Avg. MEDV")
+```
+
+### 산점도 (scatter plot)
+
+- 산점도는 두 수치형 변수의 관계를 시각화하는 데 쓰인다.
+
+```{r}
+plot(x=BostonHousing$medv, y=BostonHousing$lstat, ,  xlab = "MDEV", ylab = "LSTAT")
+```
+
+### 선 그래프 (line graph)
+
+- R의 `plot`함수는 주어진 점들의 sequence를 선으로 이어주는 기능도 갖고 있다.
+
+
+
+## R 기본 그래픽 함수들의 구성요소
+
+

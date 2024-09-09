@@ -1,0 +1,36 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{color, graphicx}
+\usepackage{epsfig}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathrsfs}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{kotex}
+
+\begin{document}
+
+
+\begin{circuitikz}
+\tikzstyle{every node}=[font=\LARGE]
+\draw [->, >=Stealth] (2.5,4.25) -- (13.75,4.25);
+\draw [->, >=Stealth] (2.5,4.25) -- (2.5,15.5);
+\draw [dashed] (2.5,9.25) -- (12.5,9.25);
+\draw [dashed] (8.75,4.5) -- (8.75,14.25);
+\draw [ fill={rgb,255:red,0; green,0; blue,0} ] (8.75,14.25) circle (0.25cm);
+\node [font=\LARGE] at (8,15) {$(X,Y)$};
+\draw [line width=1pt, short] (4,7.5) -- (11.75,14.5);
+\node [font=\LARGE] at (2,9.25) {$\bar{Y}$};
+\node [font=\LARGE] at (8.75,3.75) {$X$};
+\draw [line width=0.9pt, short] (12.75,14.25) .. controls (13.25,13.25) and (13.25,13.25) .. (12.75,12);
+\draw [line width=0.9pt, short] (12.75,11.5) .. controls (13.25,10.5) and (13.25,10.5) .. (12.75,9.25);
+\draw [dashed] (2.5,11.75) .. controls (8,11.75) and (8,11.75) .. (12.5,11.75);
+\draw [dashed] (2.5,14.25) .. controls (8,14.25) and (8,14.25) .. (12.5,14.25);
+\node [font=\LARGE] at (2,11.75) {$\hat{Y}$};
+\node [font=\LARGE] at (2,14.25) {$Y$};
+\node [font=\LARGE] at (14,13) {오차};
+\node [font=\LARGE] at (15,10.25) {예측된 부분};
+\end{circuitikz}
+
+\end{document}

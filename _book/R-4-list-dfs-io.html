@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./simple-linear-regression.html" rel="next">
 <link href="./R-3-statements.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -167,6 +168,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./R-4-list-dfs-io.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R - 데이터(테이블) 다루기</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./simple-linear-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></span></a>
   </div>
 </li>
     </ul>
@@ -709,7 +716,7 @@ scoretable.list = list(scoretable.new, subject.mean, subject.sum)
 <ul>
 <li>NA/NULL값은 실제 통계 분석에서 많이 사용된다. NA는 결측의 의미로 사용된다. NULL은 아무 것도 없는 상태를 나타내기 위해 쓰인다. 특히 특정 성분이 NA인지, NULL인지 검출하는 문장이 유용하다.</li>
 </ul>
-<p>Remark. NA나 NULL은 문자형 상수가 아니다. 예를 들면, a = “NA”라고 입력하는 것과 a = NA라고 입력하는 것은 전혀 다르다.</p>
+<p><strong>Remark.</strong> NA나 NULL은 문자형 상수가 아니다. 예를 들면, a = “NA”라고 입력하는 것과 a = NA라고 입력하는 것은 전혀 다르다.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>)</span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>math <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">69</span>, <span class="cn">NA</span>, <span class="dv">74</span>, <span class="dv">53</span>, <span class="dv">90</span>)</span>
@@ -1336,6 +1343,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./simple-linear-regression.html" class="pagination-link" aria-label="단순선형회귀모형 (simple linear regression model)">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">단순선형회귀모형 (simple linear regression model)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

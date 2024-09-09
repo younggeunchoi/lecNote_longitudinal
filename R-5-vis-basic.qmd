@@ -1,0 +1,346 @@
+---
+output:
+  html_document:
+    fig_width: 6
+    fig_height: 4
+    fig_caption: false
+---
+
+# R - 시각화 기본
+
+Acknowledgement: 본 절의 구성에는 다음 교재를 발췌하였다.
+
+- Galit Shmueli 외 4인 지음, 조재희 외 4인 역 (2018). 비즈니스 애널리틱스를 위한 데이터마이닝 (R Edition). 이앤비플러스.
+- Baumer et al. (2024) Modern Data Science with R (3rd Edition). CRC Press. [https://mdsr-book.github.io/mdsr3e/](https://mdsr-book.github.io/mdsr3e/)
+
+
+## 시각화의 중요성 및 시각화의 주요 요소
+
+- [Modern Data Science with R의 2장](https://mdsr-book.github.io/mdsr3e/02-datavizI.html)에 자세히 설명되어 있으니 일독을 권한다.
+- 좋은 시각화는 경험도 많이 필요하므로, 좋은걸 많이 봐두는 것이 좋다 (미술관 구경하듯).
+
+## 예제용 데이터
+
+- 보스턴 주택 데이터 (Boston housing data)
+  - Housing data for 506 census tracts of Boston from the 1970 census.
+  
+```{r, message=FALSE }
+# install.packages("mlbench")
+data("BostonHousing", package = "mlbench")
+head(BostonHousing, 7)
+str(BostonHousing)
+summary(BostonHousing)
+dim(BostonHousing)
+```
+
+- 암트랙 승차자 수 데이터 (AmTrak ridership data)
+
+```{r, message=FALSE }
+amtrak <- read.csv("https://raw.githubusercontent.com/mandyhpnguyen/MS-Data-Analytics-Datasets/main/Time%20Series/Amtrak%20data.csv")
+head(amtrak, 7)
+str(amtrak)
+summary(amtrak)
+dim(amtrak)
+```
+
+
+## 기본적 시각화
+
+- 히스토그램 (Histogram)
+- 상자그림 (Boxplots)
+- 막대 차트 (Bar charts)
+- 산점도 (Scatter plots)
+- 선 그래프 (Line graphs)
+
+
+
+### 히스토그램 (histogram)
+
+- 주택가격의 중앙값(medv)의 히스토그램을 살펴보자.
+
+```{r}
+hist(BostonHousing$medv, xlab = "medv")
+```
+
+### 상자 그림 (box plot)
+
+- 상자그림의 기본 문법은 다음과 같다.
+
+```{r}
+boxplot(BostonHousing$medv)
+```
+
+- 상자 그림은 다음과 같이 그린다.
+  - 위쪽 이상점은 Q3 + 1.5*(Q3-Q1)위에 있는 점으로 정의된다. 아래쪽 이상점도 비슷하게 정의된다.
+  - 박스: Q1부터 Q3까지의 범위 (가운데 선은 Q2 중간값)
+  - 박스의 위쪽/아래쪽 bar는 maximum/minimum of non-outliers
+
+
+- 상자그림은 여러 하위군을 비교하기에도 좋다. 다음은  주택가격 중앙값을 찰스강변(1) or 찰스강변 아님(0)으로 구분하여 상자그림을 그렸다.
+
+```{r}
+boxplot(BostonHousing$medv ~ BostonHousing$chas, xlab = "chas", ylab = "medv")
+```
+
+### 막대 차트 (bar chart)
+
+- 평균 주택가격을 찰스강변 지역(`chas=1`), 찰스강변 이외지역(`chas=0`)으로 구분하여 막대그래프로 그리고자 한다.
+
+- 먼저 각 지역들에 대한 요약값을 계산한다.
+
+```{r}
+data.for.plot <- aggregate(BostonHousing$medv, by = list(BostonHousing$chas), FUN = mean)
+names(data.for.plot) <- c("CHAS", "MeanMEDV")
+print(data.for.plot)
+```
+
+- 위와 같이 한 컬럼이 범주, 한 컬럼이 값을 뜻하는 테이블이 있으면 막대그래프를 그릴 수 있다.
+
+```{r}
+barplot(height=data.for.plot$MeanMEDV, names.arg = data.for.plot$CHAS,
+     xlab = "CHAS", ylab = "Avg. MEDV")
+```
+
+### 산점도 (scatter plot)
+
+- 산점도는 두 수치형 변수의 관계를 시각화하는 데 쓰인다.
+
+```{r}
+plot(x=BostonHousing$medv, y=BostonHousing$lstat,  xlab = "MDEV", ylab = "LSTAT")
+```
+
+### 선 그래프 (line graph)
+
+- R의 `plot`함수의 `type`옵션을 조정하면 주어진 점들의 sequence를 선으로 이어줄 수 있다.
+
+
+```{r}
+plot(x=1:nrow(amtrak), y=amtrak$Ridership,  type="l")
+```
+- x축에 `amtrak$Month`을 지정하여 연도-월을 뜻하게 하려면, R에서 Date 변수를 다루는 방법을 익혀야 한다. (생략)
+
+## R 기본 그래픽 함수들의 구성요소
+
+- R의 기본 시각화 기능은 특정 그림에 레이어를 하나씩 얹는 방식이다. 
+
+- 기본적인 구성요소 함수들의 개략적 설명이다.
+  - `plot(x, y)`: (x[i], y[i])들의 산점도를 새로 그린다.
+  - `points(x, y)`: 점 (x[i], y[i])들의 산점도를 추가한다.
+  - `lines(x, y)`: 점 (x[i], y[i])들의 선그래프를 추가한다.
+  - `abline()`: 특정 직선이나 수직선/수평선을 추가한다.
+  - `curve()`: (사용자가 정의한) 특정 y=f(x)의 그래프를 추가한다. 
+  - `axis()`: 축 이름 등의 축 관련 속성을 추가/수정한다.
+  - `legend()`: 범례를 추가/수정한다.
+
+- 아래 fake polynomial regresion 예제를 통햬 이해해 보자.
+
+```{r}
+## function setting
+f = function(t) return( (1/10)*t*(t-8)*(t+8) ) ;
+
+## data settings
+x = runif(50) ; 		# uniform(0,1)에서 random sample 50개 추출
+obs.x = (x - 0.5) * 20 ;	# unif(0,1) -> unif(-10, 10)으로 변환
+
+error = rnorm(50)*3 ; 	# normal(0,1)에서 random sample 50개 추출하고 3씩 곱함
+obs.y = f(obs.x) + error ;
+
+## draw an empty plot
+plot(c(-10, 10), c(f(-10), f(10)), type="n", xlab="x", ylab="f(x)", main="Sample plot", axes=F)
+## add x-axis
+axis(1, at=c(-10, -5, 0, 5, 10))
+## add y-axis
+axis(2, at=c(-30, -15, 0, 15, 30))
+## add curve
+curve(f(x), -10, 10, lty=2, col="red", add=T)
+## add points
+points(obs.x, obs.y, pch=5, col="blue") 
+## add a vertical line
+abline(v=5, col="green", lty="dashed") 
+
+
+
+legend("bottomright", c("True","Observed"), col=c("red","blue"), pch=c(-1,5), lty=c(2,-1))
+```
+
+## 다차원 시각화
+
+- 기본 용도: 스토리텔링 / 복잡한 정보를 효과적으로 표현하고 싶을 때
+
+- 전략 1. 속성 변수 추가
+  - 다른 범주형 변수를 색상, 크기, 모양, 다중 패널, 애니메이션으로 활용
+  - 응용처: 추가적인 전처리를 고려할 때, 또는 model에서 interaction term을 추가할지 결정할 때 (단순 prediction이 아닌 모델/계수의 해석이 중요한 상황에서)
+
+- 전략 2. 차트 조절 
+  - 변수변환
+  - 연속변수의 스케일 변경 (rescaling)
+  - 연속변수 그룹화 (aggregation)
+  - 범주변수의 범주 재조정
+
+### 속성 변수를 추가하는 전략
+
+- 보스턴 가구 데이터에서 NOX vs. LSTAT의 관계를 살필 때, 소득이 높은 개체 (medv > 30)와 소득이 낮은 개체에 따라 색상을 다르게 주었다.
+
+- ggplot은 Hadley Wickham이 만든 고품질의 시각화를 만들 수 있는 라이브러리이다. ggplot의 문법에 익숙해지면 더 고품질의 시각화를 간단하게 만들 수 있다. ggplot에 대한 다양한 튜토리얼이 있으나, 자세한 소개는 [Modern Data Science with R의 3장](https://mdsr-book.github.io/mdsr3e/03-datavizII.html)을 구글 번역하여 보는 방법도 있다.
+
+```{r}
+plot(y=BostonHousing$nox, x=BostonHousing$lstat, ylab = "NOX", xlab = "LSTAT",
+     col = ifelse(BostonHousing$medv > 30, "black", "gray"))
+# add legend outside of plotting area
+# In legend() use argument inset =  to control the location of the legend relative
+# to the plot.
+legend("topleft", inset=c(0, -0.2),
+       legend = c("MEDV > 30", "MEDV <= 30"), col = c("black", "gray"),
+       pch = 1, cex = 0.5)
+
+# alternative plot with ggplot
+library(ggplot2)
+ggplot(BostonHousing, aes(y = nox, x = lstat, color=(medv > 30))) + 
+  geom_point(alpha = 0.6)
+```
+
+
+- 찰스강 인접 여부에 따라 rad vs. 주택 가격의 막대그래프를 따로 그렸다.
+
+```{r}
+# compute mean MEDV per RAD and CHAS
+# In aggregate() use argument drop = FALSE to include all combinations
+# (exiting and missing) of RAD X CHAS.
+data.for.plot <- aggregate(BostonHousing$medv, by = list(BostonHousing$rad, BostonHousing$chas),
+                           FUN = mean, drop = FALSE)
+names(data.for.plot) <- c("RAD", "CHAS", "meanMEDV")
+# plot the data
+par(mfcol = c(2,1))
+barplot(height = data.for.plot$meanMEDV[data.for.plot$CHAS == 0],
+        names.arg = data.for.plot$RAD[data.for.plot$CHAS == 0],
+        xlab = "RAD", ylab = "Avg. MEDV", main = "CHAS = 0")
+barplot(height = data.for.plot$meanMEDV[data.for.plot$CHAS == 1],
+        names.arg = data.for.plot$RAD[data.for.plot$CHAS == 1],
+        xlab = "RAD", ylab = "Avg. MEDV", main = "CHAS = 1")
+
+# alternative plot with ggplot
+ggplot(data.for.plot) +
+  geom_bar(aes(x = as.factor(RAD), y = meanMEDV), stat = "identity") +
+  xlab("RAD") + facet_grid(CHAS ~ .)
+```
+
+- 속성(변수)들이 모두 연속형이라면, 모든 조합의 산점도를 한꺼번에 그리는 방법도 있다.
+
+```{r, message=FALSE}
+## simple plot
+# use plot() to generate a matrix of 4X4 panels with variable name on the diagonal,
+# and scatter plots in the remaining panels.
+plot(BostonHousing[, c(1, 3, 12, 13)])
+
+# alternative, nicer plot (displayed)
+#install.packages("GGally")
+library(GGally)
+ggpairs(BostonHousing[, c(1, 3, 12, 13)])
+```
+
+
+### 차트를 조절하는 전략
+
+
+- 한 축의 스케일을 로그 등으로 변환하는 전략
+
+```{r}
+## scatter plot: regular and log scale
+plot(BostonHousing$medv ~ BostonHousing$crim, xlab = "CRIM", ylab = "MEDV")
+ 
+# to use logarithmic scale set argument log = to either 'x', 'y', or 'xy'.
+plot(BostonHousing$medv ~ BostonHousing$crim,
+xlab = "log(CRIM)", ylab = "log(MEDV)", log = 'xy')
+```
+
+- 시계열의 경우 추세선을 추가하거나,
+
+```{r, message=FALSE}
+#install.packages("forecast")
+library(forecast)
+#Amtrak.df <- read.csv("Amtrak data.csv")
+ridership.ts <- ts(amtrak$Ridership, start = c(1991, 1), end = c(2004, 3), freq = 12)
+## fit curve
+ridership.lm <- tslm(ridership.ts ~ trend + I(trend^2))
+plot(ridership.ts, xlab = "Year", ylab = "Ridership (in 000s)", ylim = c(1300, 2300))
+lines(ridership.lm$fitted, lwd = 2)
+```
+
+- 집계 수준을 변경하면 트렌드 파악에 도움이 된다.
+
+
+```{r, message=FALSE}
+## zoom in, monthly, and annual plots
+ridership.2yrs <- window(ridership.ts, start = c(1991,1), end = c(1992,12))
+plot(ridership.2yrs, xlab = "Year", ylab = "Ridership (in 000s)", ylim = c(1300, 2300))
+monthly.ridership.ts <- tapply(ridership.ts, cycle(ridership.ts), mean)
+plot(monthly.ridership.ts, xlab = "Month", ylab = "Average Ridership",
+    ylim = c(1300, 2300), type = "l", xaxt = 'n')
+## set x labels
+axis(1, at = c(1:12), labels = c("Jan","Feb","Mar", "Apr","May","Jun",
+                                "Jul","Aug","Sep",  "Oct","Nov","Dec"))
+annual.ridership.ts <- aggregate(ridership.ts, FUN = mean)
+plot(annual.ridership.ts, xlab = "Year", ylab = "Average Ridership",
+ylim = c(1300, 2300))
+```
+
+
+## 기타 시각화
+
+### 히트맵 (heatmap)
+
+- 행렬형 자료의 현황 파악에 유용하다. 예를 들어 여러 변수들의 상관관계 행렬을 다음과 같이 나타낼 수 있다.
+
+```{r, message=FALSE}
+## simple heatmap of correlations (without values)
+heatmap(cor(BostonHousing[,-4]), Rowv = NA, Colv = NA)
+
+## heatmap with values
+#install.packages("gplots")
+library(gplots)
+heatmap.2(cor(BostonHousing[,-4]), Rowv = FALSE, Colv = FALSE, dendrogram = "none",
+     cellnote = round(cor(BostonHousing[,-4]),2),
+     notecol = "black", key = FALSE, trace = 'none', margins = c(10,10))
+```
+
+
+### 산점도의 점을 텍스트로 표시하기
+
+- 단순히 산포의 파악이 아니라 특정 자료점의 위치를 파악하는 데 유용하다.
+
+```{r, message=FALSE}
+utilities.df <- read.csv("https://raw.githubusercontent.com/GauthamBest/Training_Data/master/utilities.csv")
+plot(utilities.df$Fuel_Cost ~ utilities.df$Sales,
+     xlab = "Sales", ylab = "Fuel Cost", xlim = c(2000, 20000))
+text(x = utilities.df$Sales, y = utilities.df$Fuel_Cost,
+     labels = utilities.df$Company, pos = 4, cex = 0.8, srt = 20, offset = 0.2)
+
+# alternative with ggplot
+library(ggplot2)
+ggplot(utilities.df, aes(y = Fuel_Cost, x = Sales)) + geom_point() +
+  geom_text(aes(label = paste(" ", Company)), size = 4, hjust = 0.0, angle = 15) +
+  ylim(0.25, 2.25) + xlim(3000, 18000)
+```
+
+### 흐트러뜨리기 (jittering)
+
+- 여러 자료점이 동일한 값을 취하는 경우, 그 분포의 밀집도를 표현하기에 좋다. 
+
+```{r}
+universal.df = read.csv("https://www.dataminingbook.com/system/files/UniversalBank.csv")
+# use function alpha() in library scales to add transparent colors
+#install.packages("scales")
+library(scales)
+plot(jitter(universal.df$CCAvg, 1) ~ jitter(universal.df$Income, 1),
+   col = alpha(ifelse(universal.df$Securities.Account == 0, 'gray', 'red'), 0.4),
+   pch = 20, log = 'xy', ylim = c(0.1, 10),
+   xlab = "Income", ylab = "CCAvg")
+
+# alternative with ggplot
+library(ggplot2)
+ggplot(universal.df) +
+  geom_jitter(aes(x = Income, y = CCAvg, colour = Securities.Account)) +
+  scale_x_log10(breaks = c(10, 20, 40, 60, 100, 200)) +
+  scale_y_log10(breaks = c(0.1, 0.2, 0.4, 0.6, 1.0, 2.0, 4.0, 6.0))
+```
+
